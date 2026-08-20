@@ -21,12 +21,12 @@ Gunicorn, WhiteNoise, health check, GitHub Actions, Railway). Se indica qué tar
 
 ## Phase 2 — Foundational (prerrequisitos bloqueantes)
 
-- [ ] T007 [ ] [US1] Definir estructura de settings por entorno y documentar cómo se leen variables de entorno (`kronolearn/settings/README.md`)
-- [ ] T008 [ ] Configurar documento `docs/gunicorn-whitenoise.md` con el comando de arranque esperado y la estrategia de servir estáticos (no incluir código) (`docs/gunicorn-whitenoise.md`)
+- [x] T007 [ ] [US1] Definir estructura de settings por entorno y documentar cómo se leen variables de entorno (`kronolearn/settings/README.md`)
+- [x] T008 [ ] Configurar documento `docs/gunicorn-whitenoise.md` con el comando de arranque esperado y la estrategia de servir estáticos (no incluir código) (`docs/gunicorn-whitenoise.md`)
 - [ ] T009 [P] Implementar y validar `.github/workflows/ci.yml` en el repositorio (lint, formatting, tests rápidos). Esta tarea incluye: crear el workflow, abrir un PR de prueba que ejecute el workflow y documentar el resultado de validación (exit codes, logs relevantes).
-- [ ] T010 [ ] Documentar la estrategia mínima de pruebas en `specs/001-project-foundation/tests-strategy.md` (unit tests, pruebas críticas en CI, gate de merge)
+- [x] T010 [ ] Documentar la estrategia mínima de pruebas en `specs/001-project-foundation/tests-strategy.md` (unit tests, pruebas críticas en CI, gate de merge)
 - [ ] T011 [P] Documentar y validar la configuración esperada para PostgreSQL en Railway y local (`docs/db-railway.md`), más tarea de validación automatizada (por ejemplo, `tests/db/test_db_connection.py`) para comprobar `DATABASE_URL` y conexión básica.
-- [ ] T012 [P] Crear dependencias reproducibles: generar `requirements.txt` con versiones fijadas y hashes o `poetry.lock` (artefacto en repo). Esta tarea incluye instrucción de instalación en `docs/dependencies.md`.
+- [x] T012 [P] Crear dependencias reproducibles: `requirements.in` y `requirements.txt` contienen versiones fijadas; los hashes quedan como mejora posterior. Esta tarea incluye instrucción de instalación en `docs/dependencies.md`.
 
 ## Phase 3 — User Story Phases (por prioridad)
 

@@ -1,15 +1,43 @@
 # Dependencias reproducibles
 
-Política para la línea base: todas las dependencias deben fijarse en un archivo reproducible (`requirements.txt` con hashes o `poetry.lock`). Esto permite builds reproducibles en CI y despliegue.
+KronoLearn usa `requirements.in` como fuente declarativa de dependencias directas y `requirements.txt` como lockfile
+instalable. `requirements.txt` fija las dependencias directas y transitivas con versiones exactas y hashes de descarga.
+No se utiliza Poetry.
 
-Recomendación mínima:
+## Instalación
 
-- Crear `requirements.txt` con versiones fijas y hashes (pip-compile o `pip freeze` con control). Ejemplo de formato:
+Crear y activar un entorno virtual local; no instalar paquetes globalmente:
 
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install --require-hashes -r requirements.txt
 ```
-Django==5.2.4 --hash=sha256:...
-gunicorn==21.2.0 --hash=sha256:...
-psycopg[binary]==3.1.0 --hash=sha256:...
-```
 
-- Documentar el flujo para actualizar dependencias en esta misma página.
+`.venv/` está ignorado por el repositorio. La instalación con `--require-hashes` falla si una descarga no coincide con
+el lockfile o si falta un hash.
+
+## Actualización controlada
+
+1. Actualizar una versión directa en `requirements.in` después de verificar su compatibilidad con Python 3.14.
+2. En el entorno virtual, instalar o actualizar `pip-tools`:
+
+   ```sh
+   python3 -m pip install --upgrade pip pip-tools
+   ```
+
+3. Regenerar el lockfile con hashes:
+
+   ```sh
+   pip-compile --generate-hashes --output-file=requirements.txt requirements.in
+   ```
+
+4. Reinstalar desde cero o verificar el archivo generado:
+
+   ```sh
+   python3 -m pip install --require-hashes -r requirements.txt
+   ```
+
+5. Ejecutar las validaciones locales definidas en `specs/001-project-foundation/tests-strategy.md`.
+
+No editar manualmente las dependencias transitivas de `requirements.txt`; se resuelven desde `requirements.in`.
