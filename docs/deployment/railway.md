@@ -2,11 +2,14 @@
 
 Este documento recoge los pasos mínimos para desplegar la línea base de KronoLearn en Railway.
 
-Variables de entorno mínimas (usar `specs/001-project-foundation/.env.example` como plantilla):
+Variables de entorno mínimas (usar `.env.example`, ubicado en la raíz del repositorio, como plantilla):
 
 - `SECRET_KEY`
 - `DATABASE_URL` (cadena de conexión a PostgreSQL)
 - `RAILWAY_ENV`
+- `DEBUG=False`
+- `DJANGO_SETTINGS_MODULE=kronolearn.settings.production`
+- `ALLOWED_HOSTS=kronolearn-production.up.railway.app`
 
 Build & Procfile:
 
@@ -28,3 +31,23 @@ Verificación post-deploy:
 
 Notas de seguridad:
 - No incluyas credenciales reales en el repositorio. Usa secret env vars en Railway.
+
+## Resultado del primer despliegue
+
+- Fecha de validación: 2026-08-20
+- Entorno: Railway
+- Rama desplegada: `feature/HU-00-project-foundation`
+- Servicio web: `kronolearn`
+- Base de datos: PostgreSQL administrado por Railway
+- Dominio: kronolearn-production.up.railway.app
+- Health check: kronolearn-production.up.railway.app/healthz
+- Resultado: HTTP 200
+- Respuesta: `{"status": "ok"}`
+- Build: exitoso
+- Migraciones: ejecutadas mediante Pre-Deploy Command
+- Gunicorn: activo
+- PostgreSQL: conectado mediante referencia `DATABASE_URL`
+- Target Port de Railway: `8080`
+- Build Command: `python manage.py collectstatic --noinput`
+- Pre-Deploy Command: `python manage.py migrate --noinput`
+- Start Command: `gunicorn kronolearn.wsgi:application --bind 0.0.0.0:$PORT`

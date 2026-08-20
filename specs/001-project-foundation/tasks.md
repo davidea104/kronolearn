@@ -40,7 +40,7 @@ Objetivo: Validar despliegue y controles de integración.
 
 ## Final Phase — Polish & Cross-Cutting Concerns
 
-- [ ] T017 [P] Validar y documentar el despliegue en Railway: ejecutar un despliegue de prueba (o checklist de verificación) y confirmar que el endpoint `/healthz` responde correctamente en el entorno Railway. Registrar pasos y resultados en `docs/deployment/railway.md`.
+- [x] T017 [P] Validar y documentar el despliegue en Railway: ejecutar un despliegue de prueba (o checklist de verificación) y confirmar que el endpoint `/healthz` responde correctamente en el entorno Railway. Registrar pasos y resultados en `docs/deployment/railway.md`.
 - [ ] T018 [P] Crear `docs/maintainers.md` con contactos y responsables para despliegue y revisiones de la línea base
 - [ ] T019 [ ] Revisar y validar que `specs/001-project-foundation/checklists/requirements.md` está completa y marcar resultados
 
