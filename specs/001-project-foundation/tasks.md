@@ -46,7 +46,7 @@ Objetivo: Validar despliegue y controles de integración.
 
 ## Cross-cutting — Frontend preparation
 
-- [ ] T020 [P] Preparar `ui/` para integración frontend mínima: crear carpeta `ui/frontend/` con `package.json` placeholder y documentación en `ui/frontend/README.md` describiendo cómo integrar HTMX, Alpine.js y Tailwind CSS en el monolito.
+- [x] T020 [P] Preparar `ui/` para integración frontend mínima: crear carpeta `ui/frontend/` con `package.json` placeholder y documentación en `ui/frontend/README.md` describiendo cómo integrar HTMX, Alpine.js y Tailwind CSS en el monolito.
 - [ ] T021 [P] Preparar integración HTMX: documentar uso sugerido y añadir ejemplos en `ui/frontend/htmx-readme.md` (rutas concretas para incluir atributos `hx-*` en templates: `ui/templates/`).
 - [ ] T022 [P] Preparar integración Alpine.js: documentar el patrón de inclusión y ejemplos en `ui/frontend/alpine-readme.md` (incluir ubicación recomendada `ui/static/js/`).
 - [ ] T023 [P] Preparar integración Tailwind CSS: añadir `ui/frontend/tailwind.md` con instrucciones concretas para configuración (`tailwind.config.js`, `postcss.config.js`) y ejemplo de pipeline de build (scripts npm) para compilar CSS estático servido por WhiteNoise.
