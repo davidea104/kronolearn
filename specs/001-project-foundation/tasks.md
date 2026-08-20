@@ -54,7 +54,7 @@ Objetivo: Validar despliegue y controles de integración.
 ## Cross-cutting — DB & Dependencies
 
 - [x] T024 [P] Validar la configuración de PostgreSQL local y en Railway: crear `tests/db/test_db_connection.py` (smoke test) que use `DATABASE_URL` y haga una conexión simple (success/fail) y documentar cómo ejecutar la prueba.
-- [ ] T025 [P] Crear un artefacto de dependencias reproducibles en el repo: `requirements.txt` con versiones fijadas y hashes o `poetry.lock` (según la herramienta elegida). Añadir instrucciones de actualización en `docs/dependencies.md`.
+- [x] T025 [P] Crear un artefacto de dependencias reproducibles en el repo: `requirements.txt` con versiones fijadas y hashes o `poetry.lock` (según la herramienta elegida). Añadir instrucciones de actualización en `docs/dependencies.md`.
 
 ## Cross-cutting — Verification & consolidation
 
