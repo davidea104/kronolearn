@@ -1,7 +1,8 @@
 # Dependencias reproducibles
 
 KronoLearn usa `requirements.in` como fuente declarativa de dependencias directas y `requirements.txt` como lockfile
-instalable. `requirements.txt` fija las dependencias directas y transitivas con versiones exactas y hashes de descarga.
+instalable. `requirements.txt` fija las dependencias directas y transitivas con versiones exactas. Actualmente no
+incluye hashes de descarga.
 No se utiliza Poetry.
 
 ## Instalación
@@ -11,11 +12,11 @@ Crear y activar un entorno virtual local; no instalar paquetes globalmente:
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate
-python3 -m pip install --require-hashes -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
-`.venv/` está ignorado por el repositorio. La instalación con `--require-hashes` falla si una descarga no coincide con
-el lockfile o si falta un hash.
+`.venv/` está ignorado por el repositorio. Las versiones fijadas permiten reproducir la selección de paquetes; los
+hashes de descarga quedan pendientes de incorporarse al lockfile.
 
 ## Actualización controlada
 
@@ -29,13 +30,13 @@ el lockfile o si falta un hash.
 3. Regenerar el lockfile con hashes:
 
    ```sh
-   pip-compile --generate-hashes --output-file=requirements.txt requirements.in
+   pip-compile --output-file=requirements.txt requirements.in
    ```
 
 4. Reinstalar desde cero o verificar el archivo generado:
 
    ```sh
-   python3 -m pip install --require-hashes -r requirements.txt
+   python3 -m pip install -r requirements.txt
    ```
 
 5. Ejecutar las validaciones locales definidas en `specs/001-project-foundation/tests-strategy.md`.

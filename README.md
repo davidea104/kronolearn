@@ -15,9 +15,18 @@ Archivos y directorios relevantes:
 
 Cómo usar (desarrollo local mínimo):
 
-1. Copiar `specs/001-project-foundation/.env.example` a `.env` y rellenar variables necesarias (no incluir secretos en el repo).
+1. Copiar `.env.example` a `.env` y rellenar variables necesarias (no incluir secretos en el repo).
 2. Crear un entorno virtual de Python e instalar dependencias (ver `docs/dependencies.md`).
-3. Ejecutar servidores de desarrollo según la documentación del plan (`specs/001-project-foundation/quickstart.md`).
+3. Exportar las variables desde el shell y ejecutar Django con PostgreSQL:
+
+   ```sh
+   set -a; source .env; set +a
+   export DJANGO_SETTINGS_MODULE=kronolearn.settings.development
+   .venv/bin/python manage.py check
+   .venv/bin/python manage.py runserver
+   ```
+
+   El proyecto no usa SQLite: `DATABASE_URL` debe apuntar a PostgreSQL en todos los entornos.
 
 Notas de seguridad y constitución:
 - Nunca guardar secretos reales en el repositorio. Use variables de entorno para claves y credenciales.

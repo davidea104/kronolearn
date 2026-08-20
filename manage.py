@@ -1,0 +1,24 @@
+"""Django's command-line utility for administrative tasks."""
+
+import os
+import sys
+
+
+def main() -> None:
+    """Run administrative commands using the development settings by default."""
+    os.environ.setdefault(
+        "DJANGO_SETTINGS_MODULE", "kronolearn.settings.development"
+    )
+
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError as exc:
+        raise ImportError(
+            "Django could not be imported. Verify that dependencies are installed."
+        ) from exc
+
+    execute_from_command_line(sys.argv)
+
+
+if __name__ == "__main__":
+    main()
