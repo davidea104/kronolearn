@@ -1,8 +1,6 @@
 # Settings por entorno
 
-La configuración de KronoLearn se organiza como un paquete `kronolearn.settings` para separar valores comunes de los
-valores específicos de cada entorno. Esta tarea define la estructura; los módulos de settings ejecutables se crearán
-cuando se inicialice el proyecto Django, sin adelantar el endpoint de health check ni la configuración de base de datos.
+Esta estructura contiene los módulos de settings ejecutables del proyecto Django.
 
 ## Estructura prevista
 
@@ -27,7 +25,7 @@ kronolearn/settings/
 
 Los settings leen únicamente variables de entorno del proceso. `.env` es una conveniencia local y nunca se versiona;
 Railway proporciona las variables en el entorno de ejecución. La plantilla canónica disponible hoy es
-`specs/001-project-foundation/.env.example`.
+`.env.example`, ubicada en la raíz del repositorio
 
 | Variable | Entornos | Regla prevista |
 | --- | --- | --- |

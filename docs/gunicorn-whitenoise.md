@@ -1,7 +1,6 @@
 # Gunicorn y WhiteNoise
 
-Este documento define el contrato operativo de producción para la línea base. No implementa aún settings, WSGI ni
-el endpoint `/healthz`.
+Este documento define el contrato operativo de producción para la línea base. Los settings, WSGI y el endpoint `/healthz` ya están implementados y validados localmente.
 
 ## Arranque en Railway
 
@@ -16,8 +15,10 @@ El comando se ejecutará desde la raíz del repositorio, con `DJANGO_SETTINGS_MO
 variables de entorno declaradas en la plantilla del proyecto. No se incluyen secretos en comandos, código ni archivos
 versionados.
 
-Antes de usar este comando se deberán crear `kronolearn/wsgi.py` y los settings ejecutables como parte de la
-inicialización de Django; no son parte de T008.
+- El workflow de CI está implementado y validado mediante el PR #1.
+- PostgreSQL está configurado y validado localmente.
+- El endpoint `/healthz` está implementado y validado localmente y en CI.
+- La validación del despliegue en Railway continúa pendiente.
 
 ## Estrategia de archivos estáticos
 
