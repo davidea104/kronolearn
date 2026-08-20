@@ -24,7 +24,7 @@ Cada app también podrá alojar pruebas cercanas a su código mientras se conser
 
 - Unitarias: servicios de dominio, validadores y transformaciones deterministas.
 - Integración: persistencia, límites entre apps y contratos versionados cuando se implementen.
-- Smoke: arranque y rutas públicas esenciales. La prueba de `/healthz` pertenece a T013 y queda fuera de esta tarea.
+- Smoke: arranque y rutas públicas esenciales. La prueba de `/healthz` está implementada en `tests/smoke/test_health_check.py` y se ejecuta en CI.
 
 Las reglas críticas exigidas por la constitución —puntos, rachas, primer intento, idempotencia, progreso,
 publicación/versionado, permisos, siguiente sesión y liga semanal— deberán contar con pruebas automatizadas antes de
@@ -40,8 +40,7 @@ ruff format --check .
 python3 manage.py test
 ```
 
-Cuando se implemente T009, estas tres comprobaciones deberán ejecutarse en GitHub Actions y bloquearán el merge ante
-cualquier código de salida distinto de cero. Esta documentación no crea ni modifica el workflow de CI.
+Estas comprobaciones se ejecutan en GitHub Actions mediante `.github/workflows/ci.yml` y bloquean la integración cuando alguna termina con un código distinto de cero.
 
 ## Criterio de mantenimiento
 
