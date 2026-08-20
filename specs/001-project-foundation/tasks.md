@@ -34,7 +34,7 @@ Gunicorn, WhiteNoise, health check, GitHub Actions, Railway). Se indica qué tar
 Objetivo: Validar despliegue y controles de integración.
 
 - [x] T013 [P] [US1] Implementar prueba ejecutable de health check en `tests/smoke/test_health_check.py` que realice una solicitud GET a `/healthz` y verifique: HTTP 200 y cuerpo JSON `{"status": "ok"}`. Integrar esta prueba en el workflow CI definido en `.github/workflows/ci.yml`.
-- [ ] T014 [ ] [US1] Documentar contract de startup y comandos esperados en `specs/001-project-foundation/quickstart.md` (incluir pasos mínimos para arrancar y validar en local y en Railway).
+- [x] T014 [ ] [US1] Documentar contract de startup y comandos esperados en `specs/001-project-foundation/quickstart.md` (incluir pasos mínimos para arrancar y validar en local y en Railway).
 - [ ] T015 [P] [US1] Crear `docs/ci/ci-usage.md` con instrucciones para ejecutar localmente las comprobaciones de CI (lint, format, tests rápidos) y pasos para reproducir fallos de CI.
 - [ ] T016 [ ] [US1] Definir los criterios de aceptación automatizables para FR-001..FR-007 y listarlos en `specs/001-project-foundation/acceptance-criteria.md`
 
