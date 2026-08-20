@@ -10,12 +10,18 @@ if DEBUG:
     raise ImproperlyConfigured("DEBUG must be False in production settings.")
 
 ALLOWED_HOSTS = [
-    host.strip() for host in os.environ.get("ALLOWED_HOSTS", "").split(",") if host.strip()
+    host.strip()
+    for host in os.environ.get("ALLOWED_HOSTS", "").split(",")
+    if host.strip()
 ]
 if not ALLOWED_HOSTS:
-    raise ImproperlyConfigured("ALLOWED_HOSTS must contain at least one host in production.")
+    raise ImproperlyConfigured(
+        "ALLOWED_HOSTS must contain at least one host in production."
+    )
 if "*" in ALLOWED_HOSTS:
-    raise ImproperlyConfigured("ALLOWED_HOSTS must not contain a wildcard in production.")
+    raise ImproperlyConfigured(
+        "ALLOWED_HOSTS must not contain a wildcard in production."
+    )
 
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},

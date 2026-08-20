@@ -6,9 +6,7 @@ import sys
 
 def main() -> None:
     """Run administrative commands using the development settings by default."""
-    os.environ.setdefault(
-        "DJANGO_SETTINGS_MODULE", "kronolearn.settings.development"
-    )
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "kronolearn.settings.development")
 
     try:
         from django.core.management import execute_from_command_line
