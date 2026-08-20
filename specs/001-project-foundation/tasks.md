@@ -12,12 +12,12 @@ Gunicorn, WhiteNoise, health check, GitHub Actions, Railway). Se indica qué tar
 
 ## Phase 1 — Setup (inicial)
 
-- [ ] T001 [P] Crear README del proyecto con resumen y enlaces importantes (`README.md`)
-- [ ] T002 [P] Crear estructura de directorios propuesta para el monolito y archivos placeholder (`kronolearn/`, `accounts/`, `catalog/`, `learning/`, `gamification/`, `analytics/`, `ui/`, `tests/`)
-- [ ] T003 [P] Añadir `specs/001-project-foundation/.env.example` con variables mínimas listadas (SECRET_KEY, DATABASE_URL, RAILWAY_*, etc.)
-- [ ] T004 [P] Crear y mantener `docs/deployment/railway.md` con pasos documentados para desplegar en Railway (variables necesarias, build steps, proceso `web`/Procfile-equivalente). Esta tarea incluye la actualización posterior (consolidación de duplicados de documentación Railway).
-- [ ] T005 [P] Crear canon del contrato del health check en `specs/001-project-foundation/contracts/health-check.md` (ruta `/healthz`, método GET, cuerpo JSON esperado `{"status": "ok"}`, criterios de éxito). Esta tarea centraliza y sustituye duplicados previos de documentación del health-check.
-- [ ] T006 [P] Crear `docs/dependencies.md` que documente la política de dependencias reproducibles y el formato esperado (ej.: `requirements.txt` con hashes o `poetry.lock`).
+- [x] T001 [P] Crear README del proyecto con resumen y enlaces importantes (`README.md`)
+- [x] T002 [P] Crear estructura de directorios propuesta para el monolito y archivos placeholder (`kronolearn/`, `accounts/`, `catalog/`, `learning/`, `gamification/`, `analytics/`, `ui/`, `tests/`)
+- [x] T003 [P] Añadir `specs/001-project-foundation/.env.example` con variables mínimas listadas (SECRET_KEY, DATABASE_URL, RAILWAY_*, etc.)
+- [x] T004 [P] Crear y mantener `docs/deployment/railway.md` con pasos documentados para desplegar en Railway (variables necesarias, build steps, proceso `web`/Procfile-equivalente). Esta tarea incluye la actualización posterior (consolidación de duplicados de documentación Railway).
+- [x] T005 [P] Crear canon del contrato del health check en `specs/001-project-foundation/contracts/health-check.md` (ruta `/healthz`, método GET, cuerpo JSON esperado `{"status": "ok"}`, criterios de éxito). Esta tarea centraliza y sustituye duplicados previos de documentación del health-check.
+- [x] T006 [P] Crear `docs/dependencies.md` que documente la política de dependencias reproducibles y el formato esperado (ej.: `requirements.txt` con hashes o `poetry.lock`).
 
 ## Phase 2 — Foundational (prerrequisitos bloqueantes)
 
