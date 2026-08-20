@@ -134,26 +134,23 @@ Ejecuta las comprobaciones de lint/format y las pruebas unitarias con el Python 
 .venv/bin/python -m unittest tests.db.test_db_connection -v
 ```
 
-Resumen de despliegue en Railway (estado actual)
----------------------------------------------
 
-- Rama: `feature/HU-00-project-foundation`
-- Build Command: `python manage.py collectstatic --noinput`
-- Pre-Deploy Command: `python manage.py migrate --noinput`
-- Start Command: `gunicorn kronolearn.wsgi:application --bind 0.0.0.0:$PORT`
-- Target Port: `8080`
-- Dominio: `kronolearn-production.up.railway.app`
-- Health check: kronolearn-production.up.railway.app/healthz
-- Esperado: estado HTTP 200 y cuerpo JSON {"status": "ok"}
+Resumen de despliegue en Railway (referencia)
+-------------------------------------------
 
-Validación pública del health check (Railway)
---------------------------------------------
+La documentación de despliegue y la verificación post-deploy se mantienen como fuente canónica en
+`docs/deployment/railway.md`. Consulte ese archivo para la configuración de build, start command, variables de
+entorno y pasos de validación en Railway.
 
-Comprueba el endpoint público:
+Validación pública del health check
+----------------------------------
+
+El contrato del health check es canónico en `specs/001-project-foundation/contracts/health-check.md`.
+Puede usar el siguiente comando para comprobar el endpoint público (o local):
 
 ```bash
 curl -i https://kronolearn-production.up.railway.app/healthz
-# Esperado: HTTP/1.1 200 OK y cuerpo JSON {"status": "ok"}
+# Consulte `specs/001-project-foundation/contracts/health-check.md` para el cuerpo JSON esperado y criterios de aceptación.
 ```
 
 Referencias canónicas

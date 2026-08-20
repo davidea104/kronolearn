@@ -8,10 +8,11 @@ Este documento reúne los criterios de aceptación verificables para los requisi
 definidos en `specs/001-project-foundation/spec.md`, tomando como fuente adicional los contratos y tareas del
 proyecto.
 
-Fuentes:
+Fuentes (canónicas):
 
 - `specs/001-project-foundation/spec.md`
-- `specs/001-project-foundation/contracts/health-check.md`
+- `specs/001-project-foundation/contracts/health-check.md` (contrato canonical de `/healthz`)
+- `docs/deployment/railway.md` (guía canonical de despliegue y validación en Railway)
 - `specs/001-project-foundation/tasks.md`
 
 ---

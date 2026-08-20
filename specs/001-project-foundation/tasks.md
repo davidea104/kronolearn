@@ -59,6 +59,9 @@ Objetivo: Validar despliegue y controles de integración.
 ## Cross-cutting — Verification & consolidation
 
 - [ ] T026 [P] Consolidar y cerrar duplicados: asegurar que `specs/001-project-foundation/contracts/health-check.md` y `docs/deployment/railway.md` son las fuentes canónicas; eliminar/archivar referencias duplicadas y actualizar `specs/001-project-foundation/tasks.md` para apuntar a los archivos canónicos.
+ - [x] T026 [P] Consolidar y cerrar duplicados: asegurar que `specs/001-project-foundation/contracts/health-check.md` y `docs/deployment/railway.md` son las fuentes canónicas; eliminar/archivar referencias duplicadas y actualizar `specs/001-project-foundation/tasks.md` para apuntar a los archivos canónicos.
+
+  Nota: Las referencias a `/healthz` y al despliegue en Railway en otros documentos (por ejemplo `specs/001-project-foundation/quickstart.md` y `specs/001-project-foundation/acceptance-criteria.md`) han sido reemplazadas por enlaces a los archivos canónicos mencionados arriba. Si algún documento contenía información adicional útil que no estaba en los canónicos, se integró en el archivo correspondiente.
 
 ---
 

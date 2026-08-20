@@ -1,6 +1,9 @@
 # Gunicorn y WhiteNoise
 
-Este documento define el contrato operativo de producción para la línea base. Los settings, WSGI y el endpoint `/healthz` ya están implementados y validados localmente.
+Este documento define el contrato operativo de producción para la línea base. Los settings y WSGI están
+implementados en el proyecto; la definición y los criterios del endpoint de health check se encuentran en el
+contrato canonical `specs/001-project-foundation/contracts/health-check.md` y las comprobaciones automatizadas
+en `tests/smoke/test_health_check.py`.
 
 ## Arranque en Railway
 
@@ -17,8 +20,7 @@ versionados.
 
 - El workflow de CI está implementado y validado mediante el PR #1.
 - PostgreSQL está configurado y validado localmente.
-- El endpoint `/healthz` está implementado y validado localmente y en CI.
-- La validación del despliegue en Railway continúa pendiente.
+- El endpoint `/healthz` está definido por el contrato canonical y validado mediante pruebas smoke y en los despliegues documentados (ver `specs/001-project-foundation/contracts/health-check.md` y `docs/deployment/railway.md`).
 
 ## Estrategia de archivos estáticos
 
@@ -33,8 +35,9 @@ La configuración de producción usará almacenamiento comprimido y con nombres 
 assets inmutables. Los archivos cargados por usuarios no se servirán con WhiteNoise; su estrategia se decidirá cuando
 esa funcionalidad entre en alcance.
 
-## Límites de esta fase
+## Estado y referencias
 
-- No se crea un `Procfile` ni un workflow de CI (T009).
-- No se configura ni prueba PostgreSQL (T011).
-- No se implementa el endpoint `/healthz`.
+- Consulte `specs/001-project-foundation/contracts/health-check.md` para el contrato canonical de `/healthz`.
+- Consulte `docs/deployment/railway.md` para los pasos de despliegue, variables de entorno y verificación post-deploy en Railway.
+- Las pruebas de health check y la verificación de despliegue se documentan en los archivos mencionados y se ejecutan
+	como parte del pipeline de validación establecido en CI.
