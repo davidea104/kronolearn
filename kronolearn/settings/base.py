@@ -33,6 +33,17 @@ def environment_bool(name: str, *, default: bool | None = None) -> bool:
     raise ImproperlyConfigured(f"{name} must be set to True or False.")
 
 
+def environment_nonnegative_int(name: str, *, default: int) -> int:
+    value = os.environ.get(name, str(default))
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ImproperlyConfigured(f"{name} must be a non-negative integer.") from exc
+    if parsed < 0:
+        raise ImproperlyConfigured(f"{name} must be a non-negative integer.")
+    return parsed
+
+
 def database_config(database_url: str) -> dict[str, object]:
     """Build Django's PostgreSQL database configuration from DATABASE_URL."""
     parsed = urlparse(database_url)
@@ -118,7 +129,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {"min_length": 15},
+    },
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
@@ -132,3 +146,11 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "accounts.Account"
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "ui:learner-home"
+LOGIN_TRUSTED_PROXY_COUNT = environment_nonnegative_int(
+    "LOGIN_TRUSTED_PROXY_COUNT",
+    default=0,
+)

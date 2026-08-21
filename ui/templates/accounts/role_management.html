@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de roles | KronoLearn{% endblock %}
+
+{% block content %}
+<section aria-labelledby="roles-title">
+  <h1 id="roles-title">Gestión de roles</h1>
+  <form method="get" novalidate>
+    <div>
+      {{ form.q.label_tag }}
+      {{ form.q }}
+      {{ form.q.errors }}
+    </div>
+    <button type="submit">Buscar</button>
+  </form>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Cuenta</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Roles</th>
+          <th scope="col">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for account in page_obj %}
+          <tr>
+            <td>{{ account.email }}<br><span class="muted">{{ account.pk }}</span></td>
+            <td>{{ account.display_name }}</td>
+            <td>
+              {% if account.role_labels %}
+                {{ account.role_labels|join:", " }}
+              {% else %}
+                Sin roles asignados
+              {% endif %}
+            </td>
+            <td>
+              {% if account.pk != request.user.pk %}
+                {% if account.has_content_role %}
+                  <form method="post" action="{% url 'accounts:revoke-content-role' account.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Retirar rol de contenido</button>
+                  </form>
+                {% else %}
+                  <form method="post" action="{% url 'accounts:assign-content-role' account.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Asignar rol de contenido</button>
+                  </form>
+                {% endif %}
+              {% else %}
+                <span class="muted">Cuenta actual</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">No se encontraron cuentas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_previous or page_obj.has_next %}
+    <nav aria-label="Paginación">
+      {% if page_obj.has_previous %}
+        <a href="?q={{ form.q.value|default:''|urlencode }}&amp;page={{ page_obj.previous_page_number }}">Anterior</a>
+      {% endif %}
+      <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?q={{ form.q.value|default:''|urlencode }}&amp;page={{ page_obj.next_page_number }}">Siguiente</a>
+      {% endif %}
+    </nav>
+  {% endif %}
+</section>
+{% endblock %}
