@@ -232,7 +232,7 @@ __marimo__/
 .streamlit/secrets.toml
 
 # Speckit
-.github/
+.github/skills
 .specify/*
 !.specify/memory/
 .specify/memory/*

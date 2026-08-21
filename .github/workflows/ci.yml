@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  DJANGO_SETTINGS_MODULE: kronolearn.settings.development
+  SECRET_KEY: ci-only-secret-key-not-for-production
+  DEBUG: "True"
+  DATABASE_URL: postgresql://kronolearn:kronolearn@localhost:5432/kronolearn
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: kronolearn
+          POSTGRES_USER: kronolearn
+          POSTGRES_PASSWORD: kronolearn
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U kronolearn -d kronolearn"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      - name: Install locked dependencies
+        run: python -m pip install --require-hashes -r requirements.txt
+
+      - name: Apply database migrations
+        run: python manage.py migrate --noinput
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Check formatting
+        run: ruff format --check .
+
+      - name: Check Django configuration
+        run: python manage.py check
+
+      - name: Check migration drift
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Run Django tests
+        run: python manage.py test
+
+      - name: Verify PostgreSQL connectivity
+        run: python -m unittest tests.db.test_db_connection -v
