@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Módulos | KronoLearn{% endblock %}
+{% block content %}
+<main>
+  <header>
+    <h1>Módulos de {{ track.title }}</h1>
+    <a href="{% url 'catalog:manage-module-create' track.pk %}">Crear módulo</a>
+  </header>
+  {% if messages %}<div role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+  {% if state_form and state_form.errors %}<div role="alert">{{ state_form.errors }}</div>{% endif %}
+  {% if position_form and position_form.errors %}<div role="alert">{{ position_form.errors }}</div>{% endif %}
+  <table>
+    <thead><tr><th>Título</th><th>Estado</th><th>Posición</th><th>Acciones</th></tr></thead>
+    <tbody id="module-rows">{% include "catalog/partials/module_rows.html" %}</tbody>
+  </table>
+  <a href="{% url 'catalog:manage-track-list' %}">Volver a tracks</a>
+</main>
+{% endblock %}

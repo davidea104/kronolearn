@@ -1,0 +1,29 @@
+{% if position_form and position_form.errors %}
+<tr><td colspan="4"><div class="error-summary" role="alert">Revisa la posición solicitada. {{ position_form.errors }}</div></td></tr>
+{% endif %}
+{% if reorder_succeeded %}
+<tr><td colspan="4"><div role="status">Orden actualizado.</div></td></tr>
+{% endif %}
+{% for track in tracks %}
+<tr>
+  <td>{{ track.title }}</td>
+  <td>{{ track.get_status_display }}</td>
+  <td>{{ track.position }}</td>
+  <td>
+    <a href="{% url 'catalog:manage-track-edit' track.pk %}">Editar</a>
+    <a href="{% url 'catalog:manage-module-list' track.pk %}">Módulos</a>
+    <form method="post" action="{% url 'catalog:manage-track-reorder' track.pk %}" hx-post="{% url 'catalog:manage-track-reorder' track.pk %}" hx-target="#track-rows" hx-swap="innerHTML">
+      {% csrf_token %}<input type="number" name="position" value="{{ track.position }}" min="1"><input type="hidden" name="expected_order_revision" value="{{ track_order_revision }}"><button type="submit">Mover</button>
+    </form>
+    {% if track.status == "ACTIVE" %}
+    <form method="post" action="{% url 'catalog:manage-track-deactivate' track.pk %}">{% csrf_token %}<input type="hidden" name="expected_revision" value="{{ track.revision }}"><button type="submit">Desactivar</button></form>
+    {% else %}
+    <form method="post" action="{% url 'catalog:manage-track-activate' track.pk %}">
+      {% csrf_token %}<input type="hidden" name="expected_revision" value="{{ track.revision }}"><label>Fuente <input name="source" maxlength="500" required></label><label>Fecha de revisión <input type="date" name="reviewed_on" required></label><input type="hidden" name="editorial_status" value="APPROVED"><button type="submit">Activar</button>
+    </form>
+    {% endif %}
+  </td>
+</tr>
+{% empty %}
+<tr><td colspan="4">No hay tracks.</td></tr>
+{% endfor %}

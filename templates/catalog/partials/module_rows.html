@@ -1,0 +1,24 @@
+{% if position_form and position_form.errors %}
+<tr><td colspan="4"><div class="error-summary" role="alert">Revisa la posición solicitada. {{ position_form.errors }}</div></td></tr>
+{% endif %}
+{% if reorder_succeeded %}
+<tr><td colspan="4"><div role="status">Orden actualizado.</div></td></tr>
+{% endif %}
+{% for module in modules %}
+<tr>
+  <td>{{ module.title }}</td>
+  <td>{{ module.get_status_display }}</td>
+  <td>{{ module.position }}</td>
+  <td>
+    <a href="{% url 'catalog:manage-module-edit' track.pk module.pk %}">Editar</a>
+    <form method="post" action="{% url 'catalog:manage-module-reorder' track.pk module.pk %}" hx-post="{% url 'catalog:manage-module-reorder' track.pk module.pk %}" hx-target="#module-rows" hx-swap="innerHTML">{% csrf_token %}<input type="number" name="position" value="{{ module.position }}" min="1"><input type="hidden" name="expected_order_revision" value="{{ module_order_revision }}"><button type="submit">Mover</button></form>
+    {% if module.status == "ACTIVE" %}
+    <form method="post" action="{% url 'catalog:manage-module-deactivate' track.pk module.pk %}">{% csrf_token %}<input type="hidden" name="expected_revision" value="{{ module.revision }}"><button type="submit">Desactivar</button></form>
+    {% else %}
+    <form method="post" action="{% url 'catalog:manage-module-activate' track.pk module.pk %}">{% csrf_token %}<input type="hidden" name="expected_revision" value="{{ module.revision }}"><label>Fuente <input name="source" maxlength="500" required></label><label>Fecha de revisión <input type="date" name="reviewed_on" required></label><input type="hidden" name="editorial_status" value="APPROVED"><button type="submit">Activar</button></form>
+    {% endif %}
+  </td>
+</tr>
+{% empty %}
+<tr><td colspan="4">No hay módulos.</td></tr>
+{% endfor %}
