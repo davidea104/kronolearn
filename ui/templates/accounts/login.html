@@ -16,16 +16,34 @@
     {% csrf_token %}
     {% for field in form %}
       {% if not field.is_hidden %}
-        <div>
+        <div class="field-group">
           {{ field.label_tag }}
-          {{ field }}
-          {{ field.errors }}
+          <div class="field-input">
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <div class="field-error">{{ field.errors }}</div>
+          {% endif %}
         </div>
       {% else %}
         {{ field }}
       {% endif %}
     {% endfor %}
-    <button type="submit">Iniciar sesión</button>
+    {% include "ui/components/button.html" with label="Iniciar sesión" type="submit" %}
   </form>
 </section>
+
+<style>
+  .field-group {
+    margin-bottom: 1rem;
+  }
+  .field-input {
+    margin-top: 0.25rem;
+  }
+  .field-error {
+    color: var(--accent-red);
+    font-size: 14px;
+    margin-top: 0.25rem;
+  }
+</style>
 {% endblock %}

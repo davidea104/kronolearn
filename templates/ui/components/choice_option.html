@@ -1,0 +1,127 @@
+{# choice_option.html #}
+{# Opción seleccionable con radio input oculto (sr-only) y label estilizada #}
+{# Parámetros: name (required), value (required), label (required), checked (optional), state (optional: default|selected|optimal|partial|incorrect) #}
+<div class="choice-option-wrapper">
+  <input 
+    type="radio" 
+    id="choice_{{ name }}_{{ value }}" 
+    name="{{ name }}" 
+    value="{{ value }}"
+    {% if checked %}checked{% endif %}
+    class="sr-only"
+  >
+  <label 
+    for="choice_{{ name }}_{{ value }}"
+    class="choice-option choice-option--{{ state|default:'default' }}"
+  >
+    {% if state == 'optimal' %}
+      <span class="choice-option__indicator choice-option__indicator--optimal">✓</span>
+      {{ label }} <span class="choice-option__badge">Correcto</span>
+    {% elif state == 'incorrect' %}
+      <span class="choice-option__indicator choice-option__indicator--incorrect">✗</span>
+      <span style="text-decoration: line-through;">{{ label }}</span>
+    {% elif state == 'partial' %}
+      <span class="choice-option__indicator choice-option__indicator--partial">◐</span>
+      {{ label }}
+    {% elif state == 'selected' %}
+      <span class="choice-option__indicator choice-option__indicator--selected">✓</span>
+      {{ label }}
+    {% else %}
+      {{ label }}
+    {% endif %}
+  </label>
+</div>
+
+<style>
+  .choice-option-wrapper {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  
+  .choice-option {
+    display: block;
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--paper);
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--ink);
+    box-shadow: var(--shadow-hard);
+    transition: all 0.15s ease-out;
+    user-select: none;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  input[type="radio"]:checked + .choice-option {
+    box-shadow: var(--shadow-light);
+  }
+  
+  input[type="radio"]:focus-visible + .choice-option {
+    outline: 2px solid var(--border);
+    outline-offset: 2px;
+  }
+  
+  .choice-option--default {
+    border-color: var(--border);
+  }
+  
+  .choice-option--selected {
+    border-color: var(--border);
+    box-shadow: var(--shadow-light);
+  }
+  
+  .choice-option--optimal {
+    border-left: 4px solid var(--accent-green);
+    box-shadow: var(--shadow-light);
+  }
+  
+  .choice-option--partial {
+    border-left: 4px solid var(--accent-lavender);
+    box-shadow: var(--shadow-light);
+  }
+  
+  .choice-option--incorrect {
+    border-left: 4px solid var(--accent-red);
+    box-shadow: var(--shadow-light);
+  }
+  
+  .choice-option__indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  
+  .choice-option__indicator--optimal {
+    color: var(--accent-green);
+  }
+  
+  .choice-option__indicator--incorrect {
+    color: var(--accent-red);
+  }
+  
+  .choice-option__indicator--partial {
+    color: var(--accent-lavender);
+  }
+  
+  .choice-option__indicator--selected {
+    color: var(--ink);
+  }
+  
+  .choice-option__badge {
+    display: inline-block;
+    background: var(--accent-green);
+    color: var(--ink);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: auto;
+  }
+</style>

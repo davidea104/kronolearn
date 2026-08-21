@@ -1,0 +1,58 @@
+{# progress_bar.html #}
+{# Barra de progreso con valor numérico #}
+{# Parámetros: value (required, 0-100), label (optional), class (optional) #}
+<div class="progress-container {{ class }}">
+  {% if label %}
+    <div class="progress-label">{{ label }}</div>
+  {% endif %}
+  <div class="progress-bar-wrapper">
+    <div class="progress-bar">
+      <div class="progress-bar__fill" style="width: {{ value }}%;"></div>
+    </div>
+    <div class="progress-value">{{ value }}%</div>
+  </div>
+</div>
+
+<style>
+  .progress-container {
+    display: block;
+    margin: 1rem 0;
+  }
+  
+  .progress-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  
+  .progress-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .progress-bar {
+    flex: 1;
+    height: 24px;
+    background: var(--divider);
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .progress-bar__fill {
+    height: 100%;
+    background: var(--accent-green);
+    transition: width 0.3s ease-out;
+  }
+  
+  .progress-value {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ink);
+    min-width: 3rem;
+    text-align: right;
+  }
+</style>

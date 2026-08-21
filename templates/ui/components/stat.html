@@ -1,0 +1,36 @@
+{# stat.html #}
+{# Cifra grande + etiqueta (para dashboards) #}
+{# Parámetros: number (required), label (required), accent (optional: green|lavender|default), class (optional) #}
+<div class="stat {% if accent == 'green' %}stat--green{% elif accent == 'lavender' %}stat--lavender{% endif %} {{ class }}">
+  <div class="stat__number">{{ number }}</div>
+  <div class="stat__label">{{ label }}</div>
+</div>
+
+<style>
+  .stat {
+    text-align: center;
+    padding: 1.5rem;
+  }
+  
+  .stat__number {
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+  
+  .stat--green .stat__number {
+    color: var(--accent-green);
+  }
+  
+  .stat--lavender .stat__number {
+    color: var(--accent-lavender);
+  }
+  
+  .stat__label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink-secondary);
+  }
+</style>

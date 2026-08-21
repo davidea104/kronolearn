@@ -17,16 +17,43 @@
   <form method="post" novalidate>
     {% csrf_token %}
     {% for field in form %}
-      <div>
-        {{ field.label_tag }}
+      {% if not field.is_hidden %}
+        <div class="field-group">
+          {{ field.label_tag }}
+          <div class="field-input">
+            {{ field }}
+          </div>
+          {% if field.help_text %}
+            <p class="field-help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>
+          {% endif %}
+          {% if field.errors %}
+            <div class="field-error">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% else %}
         {{ field }}
-        {% if field.help_text %}
-          <p class="muted" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>
-        {% endif %}
-        {{ field.errors }}
-      </div>
+      {% endif %}
     {% endfor %}
-    <button type="submit">Crear cuenta</button>
+    {% include "ui/components/button.html" with label="Crear cuenta" type="submit" %}
   </form>
 </section>
+
+<style>
+  .field-group {
+    margin-bottom: 1rem;
+  }
+  .field-input {
+    margin-top: 0.25rem;
+  }
+  .field-help {
+    font-size: 14px;
+    color: var(--ink-secondary);
+    margin: 0.25rem 0 0 0;
+  }
+  .field-error {
+    color: var(--accent-red);
+    font-size: 14px;
+    margin-top: 0.25rem;
+  }
+</style>
 {% endblock %}

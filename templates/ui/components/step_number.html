@@ -1,0 +1,32 @@
+{# step_number.html #}
+{# Numeración de pasos (01, 02, 03) con etiqueta #}
+{# Parámetros: number (required), label (required), class (optional) #}
+<div class="step-number {{ class }}">
+  <div class="step-number__digit">{{ number|stringformat:"02d" }}</div>
+  <div class="step-number__label">{{ label }}</div>
+</div>
+
+<style>
+  .step-number {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .step-number__digit {
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--ink-secondary);
+    min-width: 3rem;
+    text-align: right;
+    line-height: 1.2;
+  }
+  
+  .step-number__label {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ink);
+    padding-top: 0.25rem;
+  }
+</style>
