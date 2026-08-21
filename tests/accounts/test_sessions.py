@@ -2,12 +2,13 @@
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Group
 from django.contrib.auth.views import LoginView
 from django.test import Client, TestCase
 from django.urls import NoReverseMatch, resolve, reverse
 
 from accounts.forms import ThrottledAuthenticationForm
-from accounts.security import SAFE_RETURN_ROUTES
+from accounts.security import CONTENT_ADMIN_ROLE, SAFE_RETURN_ROUTES
 
 VALID_PASSWORD = "correct-horse-battery-staple"
 GENERIC_FAILURE = "No fue posible iniciar sesión con los datos proporcionados."
@@ -120,6 +121,70 @@ class LoginViewTests(TestCase):
         self.assertEqual(response.status_code, 303)
         self.assertEqual(response.url, named_url(self, "ui:learner-home"))
 
+    def test_malformed_catalog_next_falls_back(self):
+        response = self.client.post(
+            named_url(self, "accounts:login"),
+            {
+                "username": "learner@example.com",
+                "password": VALID_PASSWORD,
+                "next": "/learn/catalog/tracks/not-a-uuid/",
+            },
+        )
+
+        self.assertEqual(response.status_code, 303)
+        self.assertEqual(response.url, named_url(self, "ui:learner-home"))
+
+    def test_invalid_admin_object_next_falls_back(self):
+        from catalog.models import Module, Track
+
+        content_group, _ = Group.objects.get_or_create(name=CONTENT_ADMIN_ROLE)
+        self.account.groups.add(content_group)
+        first_track = Track.objects.create(
+            title="First track",
+            description="First description",
+            audience="Learners",
+            position=1,
+        )
+        second_track = Track.objects.create(
+            title="Second track",
+            description="Second description",
+            audience="Learners",
+            position=2,
+        )
+        module = Module.objects.create(
+            track=first_track,
+            title="First module",
+            objective="First objective",
+            position=1,
+        )
+        login_url = named_url(self, "accounts:login")
+        destinations = (
+            "/catalog/manage/tracks/not-a-uuid/edit/",
+            "/catalog/manage/tracks/00000000-0000-0000-0000-000000000001/modules/",
+            (
+                "/catalog/manage/tracks/00000000-0000-0000-0000-000000000001/"
+                "modules/not-a-uuid/edit/"
+            ),
+            reverse(
+                "catalog:manage-module-edit",
+                kwargs={"track_ref": second_track.pk, "module_ref": module.pk},
+            ),
+        )
+
+        for destination in destinations:
+            with self.subTest(destination=destination):
+                response = self.client.post(
+                    login_url,
+                    {
+                        "username": "learner@example.com",
+                        "password": VALID_PASSWORD,
+                        "next": destination,
+                    },
+                )
+                self.assertEqual(response.status_code, 303)
+                self.assertEqual(response.url, named_url(self, "ui:learner-home"))
+                self.client.logout()
+
     def test_safe_return_policy_cannot_be_modified_at_runtime(self):
         original_predicate = SAFE_RETURN_ROUTES["accounts:profile"]
 
@@ -127,6 +192,42 @@ class LoginViewTests(TestCase):
             SAFE_RETURN_ROUTES["accounts:profile"] = lambda user: False
 
         self.assertTrue(original_predicate(self.account))
+
+    def test_catalog_safe_returns_require_active_or_content_admin_role(self):
+        learner_catalog = named_url(self, "catalog:track-list")
+        admin_catalog = named_url(self, "catalog:manage-track-list")
+        login_url = named_url(self, "accounts:login")
+        learner = self.client.post(
+            login_url,
+            {
+                "username": "learner@example.com",
+                "password": VALID_PASSWORD,
+                "next": learner_catalog,
+            },
+        )
+        self.client.logout()
+        denied_admin = self.client.post(
+            login_url,
+            {
+                "username": "learner@example.com",
+                "password": VALID_PASSWORD,
+                "next": admin_catalog,
+            },
+        )
+        content_group, _ = Group.objects.get_or_create(name=CONTENT_ADMIN_ROLE)
+        self.account.groups.add(content_group)
+        self.client.logout()
+        allowed_admin = self.client.post(
+            login_url,
+            {
+                "username": "learner@example.com",
+                "password": VALID_PASSWORD,
+                "next": admin_catalog,
+            },
+        )
+        self.assertEqual(learner.url, learner_catalog)
+        self.assertEqual(denied_admin.url, named_url(self, "ui:learner-home"))
+        self.assertEqual(allowed_admin.url, admin_catalog)
 
 
 class LogoutAndPrivateSessionTests(TestCase):

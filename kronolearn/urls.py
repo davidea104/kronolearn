@@ -8,6 +8,7 @@ from kronolearn.health import healthz
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
+    path("", include("catalog.urls")),
     path("", include("ui.urls")),
     path("healthz", healthz, name="healthz"),
 ]

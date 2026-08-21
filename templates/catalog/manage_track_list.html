@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Tracks | KronoLearn{% endblock %}
+{% block content %}
+<main>
+  <header>
+    <h1>Tracks</h1>
+    <a href="{% url 'catalog:manage-track-create' %}">Crear track</a>
+  </header>
+  {% if messages %}<div role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+  {% if state_form and state_form.errors %}<div role="alert">{{ state_form.errors }}</div>{% endif %}
+  {% if position_form and position_form.errors %}<div role="alert">{{ position_form.errors }}</div>{% endif %}
+  <table>
+    <thead><tr><th>Título</th><th>Estado</th><th>Posición</th><th>Acciones</th></tr></thead>
+    <tbody id="track-rows">{% include "catalog/partials/track_rows.html" %}</tbody>
+  </table>
+</main>
+{% endblock %}

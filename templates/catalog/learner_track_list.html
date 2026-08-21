@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Catálogo | KronoLearn{% endblock %}
+{% block content %}
+<section aria-labelledby="catalog-title">
+  <h1 id="catalog-title">Rutas de aprendizaje</h1>
+  <ol>
+    {% for track in tracks %}
+    <li>
+      <h2><a href="{% url 'catalog:track-detail' track.pk %}">{{ track.title }}</a></h2>
+      <p>{{ track.description }}</p>
+      <p><strong>Audiencia:</strong> {{ track.audience }}</p>
+    </li>
+    {% empty %}
+    <li>No hay rutas disponibles.</li>
+    {% endfor %}
+  </ol>
+</section>
+{% endblock %}
