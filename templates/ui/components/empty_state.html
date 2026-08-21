@@ -1,0 +1,47 @@
+{# empty_state.html #}
+{# Placeholder centrado cuando no hay contenido #}
+{# Parámetros: icon (optional), headline (required), message (optional), action_label (optional), action_href (optional), class (optional) #}
+<div class="empty-state {{ class }}">
+  {% if icon %}
+    <div class="empty-state__icon">{{ icon }}</div>
+  {% endif %}
+  <h3 class="empty-state__headline">{{ headline }}</h3>
+  {% if message %}
+    <p class="empty-state__message">{{ message }}</p>
+  {% endif %}
+  {% if action_label and action_href %}
+    <div class="empty-state__action">
+      {% include "ui/components/button.html" with label=action_label href=action_href %}
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+  }
+  
+  .empty-state__icon {
+    font-size: 64px;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+  
+  .empty-state__headline {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .empty-state__message {
+    font-size: 16px;
+    color: var(--ink-secondary);
+    margin: 0 0 1.5rem 0;
+  }
+  
+  .empty-state__action {
+    margin-top: 1.5rem;
+  }
+</style>

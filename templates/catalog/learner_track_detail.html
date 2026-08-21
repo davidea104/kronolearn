@@ -4,20 +4,80 @@
 {% if track %}
 <article aria-labelledby="track-title">
   <h1 id="track-title">{{ track.title }}</h1>
-  <p>{{ track.description }}</p>
-  <p><strong>Audiencia:</strong> {{ track.audience }}</p>
+  <p class="lead">{{ track.description }}</p>
+  <p><strong>Audiencia:</strong> <span class="muted">{{ track.audience }}</span></p>
   <h2>Módulos</h2>
-  <ol>
+  {% if modules %}
+  <ol class="module-list">
     {% for item in modules %}
-    <li><a href="{% url 'catalog:module-detail' track.pk item.pk %}">{{ item.title }}</a> — {{ item.objective }}</li>
-    {% empty %}<li>No hay módulos disponibles.</li>{% endfor %}
+    <li>
+      <a href="{% url 'catalog:module-detail' track.pk item.pk %}">{{ item.title }}</a>
+      <span class="muted">{{ item.objective }}</span>
+    </li>
+    {% endfor %}
   </ol>
+  {% else %}
+  <p class="muted">No hay módulos disponibles.</p>
+  {% endif %}
 </article>
 {% else %}
 <article aria-labelledby="module-title">
   <h1 id="module-title">{{ module.title }}</h1>
-  <p>{{ module.objective }}</p>
+  <p class="lead">{{ module.objective }}</p>
 </article>
 {% endif %}
-<p><a href="{% url 'catalog:track-list' %}">Volver al catálogo</a></p>
+<div class="back-link">
+  <a href="{% url 'catalog:track-list' %}">← Volver al catálogo</a>
+</div>
+
+<style>
+  .lead {
+    font-size: 18px;
+    color: var(--ink-secondary);
+    margin: 1rem 0;
+    line-height: 1.6;
+  }
+  .module-list {
+    list-style: decimal;
+    padding-left: 2rem;
+  }
+  .module-list li {
+    margin-bottom: 1.5rem;
+  }
+  .module-list a {
+    display: block;
+    font-weight: 400;
+    color: var(--ink);
+    text-decoration: none;
+    margin-bottom: 0.25rem;
+  }
+  .module-list a:hover {
+    text-decoration: underline;
+  }
+  .module-list a:focus-visible {
+    outline: 2px solid var(--border);
+    outline-offset: 2px;
+  }
+  .module-list .muted {
+    display: block;
+    font-size: 14px;
+    color: var(--ink-secondary);
+  }
+  .back-link {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--divider);
+  }
+  .back-link a {
+    text-decoration: none;
+    padding: 0.5rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .back-link a:focus-visible {
+    outline: 2px solid var(--border);
+    outline-offset: 2px;
+  }
+</style>
 {% endblock %}

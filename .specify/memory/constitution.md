@@ -1,12 +1,11 @@
 <!--
 Sync Impact Report
 
-- Version change: 1.0.0 -> 1.1.0
-- Modified principles: none; all ten project principles retain their meaning
-- Modified sections: Gobernanza -> Governance; amendment, constitutional versioning,
-  and compliance review rules made explicit
-- Added sections: none
-- Removed sections: unresolved generic constitution scaffold preceding the project constitution
+- Version change: 1.1.0 -> 1.2.0
+- Modified principles: none; all existing principles retain their meaning
+- Modified sections: none
+- Added sections: principle 11 "Sistema visual coherente" under Core Principles
+- Removed sections: none
 - Follow-up TODOs: none
 
 -->
@@ -104,6 +103,18 @@ Cada versión publicada de contenido DEBE conservar como mínimo:
 Las versiones publicadas DEBEN ser inmutables y los intentos históricos DEBEN conservar la versión exacta presentada
 al aprendiz.
 
+### 11. Sistema visual coherente
+
+Todo componente visual nuevo DEBE generarse consultando y cumpliendo
+`.github/instructions/design.instructions.md`, que es la fuente de verdad del sistema visual de KronoLearn.
+La implementación DEBE respetar sus tokens, tipografía, accesibilidad, estados visuales, reglas de foco, áreas
+mínimas de toque, movimiento reducido y restricciones de sombras, colores y estructura. Los componentes DEBEN
+mantenerse como parciales reutilizables bajo `templates/ui/components/`, sin lógica de negocio ni acceso a la base
+de datos. Toda revisión de un componente nuevo DEBE comprobar explícitamente su conformidad con dicha guía.
+
+La regla existe para evitar divergencias visuales y garantizar que los componentes nuevos sean consistentes,
+accesibles y reutilizables en las interfaces server-rendered del monolito.
+
 ## Restricciones tecnológicas
 
 Las siguientes tecnologías son obligatorias y forman parte del contrato técnico del proyecto:
@@ -150,4 +161,4 @@ Durante la línea base, no se introducirán otras infraestructuras externas salv
   cumplir una fecha de entrega.
 - Toda enmienda DEBE actualizar la versión y `Last Amended`; `Ratified` conserva la fecha de adopción original.
 
-**Version**: 1.1.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-20
+**Version**: 1.2.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-21

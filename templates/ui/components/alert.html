@@ -1,0 +1,78 @@
+{# alert.html #}
+{# Notificación con borde de color según tipo #}
+{# Parámetros: message (required), type (required: success|error|info|warning), class (optional) #}
+<div class="alert alert--{{ type }} {{ class }}" role="alert">
+  {% if type == 'success' %}
+    <span class="alert__icon">✓</span>
+  {% elif type == 'error' %}
+    <span class="alert__icon">⚠</span>
+  {% elif type == 'info' %}
+    <span class="alert__icon">ℹ</span>
+  {% elif type == 'warning' %}
+    <span class="alert__icon">⚠</span>
+  {% endif %}
+  <span class="alert__message">{{ message }}</span>
+</div>
+
+<style>
+  .alert {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-left: 4px solid;
+    border-radius: var(--border-radius);
+    background: var(--paper);
+    border-top: 1px solid var(--divider);
+    border-right: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    font-size: 16px;
+    color: var(--ink);
+    margin: 1rem 0;
+  }
+  
+  .alert--success {
+    border-left-color: var(--accent-green);
+  }
+  
+  .alert--error {
+    border-left-color: var(--accent-red);
+  }
+  
+  .alert--info {
+    border-left-color: var(--accent-lavender);
+  }
+  
+  .alert--warning {
+    border-left-color: #F59E0B;
+  }
+  
+  .alert__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  
+  .alert--success .alert__icon {
+    color: var(--accent-green);
+  }
+  
+  .alert--error .alert__icon {
+    color: var(--accent-red);
+  }
+  
+  .alert--info .alert__icon {
+    color: var(--accent-lavender);
+  }
+  
+  .alert--warning .alert__icon {
+    color: #F59E0B;
+  }
+  
+  .alert__message {
+    flex: 1;
+  }
+</style>

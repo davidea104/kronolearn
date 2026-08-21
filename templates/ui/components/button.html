@@ -1,0 +1,14 @@
+{# button.html #}
+{# Botón primario o secundario #}
+{# Parámetros: label (required), href (optional), variant (default: primary), type (default: button), class (optional) #}
+<div class="button-wrapper">
+  {% if href %}
+    <a href="{{ href }}" class="button {% if variant == 'outline' %}button--outline{% endif %} {{ class }}" role="button">
+      {{ label }}
+    </a>
+  {% else %}
+    <button type="{{ type }}" class="button {% if variant == 'outline' %}button--outline{% endif %} {{ class }}">
+      {{ label }}
+    </button>
+  {% endif %}
+</div>
