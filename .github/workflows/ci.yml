@@ -61,6 +61,18 @@ jobs:
       - name: Check migration drift
         run: python manage.py makemigrations --check --dry-run
 
+      - name: Run catalog tests on PostgreSQL
+        run: python manage.py test tests.catalog -v 2
+
+      - name: Run catalog concurrency tests on PostgreSQL
+        run: >-
+          python manage.py test
+          tests.catalog.test_content_services.TrackVersionConcurrencyTests
+          tests.catalog.test_content_services.ModuleVersionConcurrencyTests
+          tests.catalog.test_ordering_services.TrackOrderingConcurrencyTests
+          tests.catalog.test_ordering_services.ModuleOrderingConcurrencyTests
+          -v 2
+
       - name: Run Django tests
         run: python manage.py test
 

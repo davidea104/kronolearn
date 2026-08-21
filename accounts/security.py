@@ -54,6 +54,12 @@ def _platform_admin(user) -> bool:
     return bool(_active_account(user) and user.is_superuser)
 
 
+def _content_admin(user) -> bool:
+    return bool(
+        _active_account(user) and user.groups.filter(name=CONTENT_ADMIN_ROLE).exists()
+    )
+
+
 def active_account_required(view_func):
     @wraps(view_func)
     def guarded_view(request, *args, **kwargs):
@@ -75,8 +81,55 @@ SAFE_RETURN_ROUTES = MappingProxyType(
         "ui:learner-home": _active_account,
         "accounts:profile": _active_account,
         "accounts:role-management": _platform_admin,
+        "catalog:track-list": _active_account,
+        "catalog:track-detail": _active_account,
+        "catalog:module-detail": _active_account,
+        "catalog:manage-track-list": _content_admin,
+        "catalog:manage-track-create": _content_admin,
+        "catalog:manage-track-edit": _content_admin,
+        "catalog:manage-module-list": _content_admin,
+        "catalog:manage-module-create": _content_admin,
+        "catalog:manage-module-edit": _content_admin,
     }
 )
+
+
+def _catalog_destination_exists(match, user) -> bool:
+    if match.view_name == "catalog:track-detail":
+        from catalog.services.queries import get_active_track
+
+        return get_active_track(match.kwargs["track_id"]) is not None
+    if match.view_name == "catalog:module-detail":
+        from catalog.services.queries import get_active_module
+
+        return (
+            get_active_module(
+                match.kwargs["track_id"],
+                match.kwargs["module_id"],
+            )
+            is not None
+        )
+    if match.view_name == "catalog:manage-track-edit":
+        from catalog.services.queries import get_track_for_admin
+
+        return get_track_for_admin(user, match.kwargs["track_ref"]) is not None
+    if match.view_name in {
+        "catalog:manage-module-list",
+        "catalog:manage-module-create",
+    }:
+        from catalog.services.queries import get_track_for_admin
+
+        return get_track_for_admin(user, match.kwargs["track_ref"]) is not None
+    if match.view_name == "catalog:manage-module-edit":
+        from catalog.services.queries import get_module_for_admin
+
+        _, module = get_module_for_admin(
+            user,
+            match.kwargs["track_ref"],
+            match.kwargs["module_ref"],
+        )
+        return module is not None
+    return True
 
 
 def resolve_safe_next(candidate: str, *, request, user) -> str:
@@ -94,6 +147,10 @@ def resolve_safe_next(candidate: str, *, request, user) -> str:
     except Resolver404:
         return fallback
     predicate = SAFE_RETURN_ROUTES.get(match.view_name)
-    if predicate is None or not predicate(user):
+    if (
+        predicate is None
+        or not predicate(user)
+        or not _catalog_destination_exists(match, user)
+    ):
         return fallback
     return candidate
