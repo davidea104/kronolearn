@@ -10,6 +10,7 @@ Variables de entorno mínimas (usar `.env.example`, ubicado en la raíz del repo
 - `DEBUG=False`
 - `DJANGO_SETTINGS_MODULE=kronolearn.settings.production`
 - `ALLOWED_HOSTS=kronolearn-production.up.railway.app`
+- `LOGIN_TRUSTED_PROXY_COUNT=1` para la topologia normal de un proxy de Railway; ajustar solo si se agrega o retira un proxy confiable delante de la aplicacion.
 
 Build & Procfile:
 

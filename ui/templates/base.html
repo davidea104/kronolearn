@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}KronoLearn{% endblock %}</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17211b;
+      --muted: #5b665f;
+      --paper: #f5f3eb;
+      --surface: #fffefa;
+      --line: #c9cec8;
+      --accent: #006d5b;
+      --accent-strong: #004c40;
+      --danger: #a12b2b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.5;
+    }
+    a { color: var(--accent-strong); }
+    header {
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+    }
+    .shell { width: min(100% - 2rem, 68rem); margin-inline: auto; }
+    .masthead {
+      min-height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand { color: var(--ink); font-size: 1.35rem; font-weight: 700; text-decoration: none; }
+    nav { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    main { padding-block: 2.5rem 4rem; }
+    .panel {
+      max-width: 34rem;
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+    }
+    h1, h2 { line-height: 1.15; letter-spacing: 0; }
+    form { display: grid; gap: 1rem; }
+    label { display: block; font-weight: 700; }
+    input {
+      width: 100%;
+      margin-top: .35rem;
+      padding: .7rem .75rem;
+      border: 1px solid #8e9992;
+      border-radius: 4px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+    button, .button {
+      width: fit-content;
+      padding: .7rem 1rem;
+      border: 1px solid var(--accent-strong);
+      border-radius: 4px;
+      background: var(--accent);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    button:hover, .button:hover { background: var(--accent-strong); }
+    .link-button { padding: 0; border: 0; background: transparent; color: var(--accent-strong); }
+    .inline-form { display: block; }
+    .messages, .errorlist, .error-summary { padding-left: 1.25rem; }
+    .errorlist, .error-summary { color: var(--danger); }
+    .muted { color: var(--muted); }
+    @media (max-width: 38rem) {
+      .masthead { align-items: flex-start; flex-direction: column; padding-block: 1rem; }
+      main { padding-top: 1.5rem; }
+      .panel { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell masthead">
+      <a class="brand" href="/">KronoLearn</a>
+      <nav aria-label="Navegación principal">
+        {% block navigation %}
+          {% if request.user.is_authenticated %}
+            <a href="{% url 'ui:learner-home' %}">Inicio</a>
+            <a href="{% url 'accounts:profile' %}">Perfil</a>
+            {% if request.user.is_superuser %}
+              <a href="{% url 'accounts:role-management' %}">Roles</a>
+            {% endif %}
+            <form class="inline-form" method="post" action="{% url 'accounts:logout' %}">
+              {% csrf_token %}
+              <button class="link-button" type="submit">Cerrar sesión</button>
+            </form>
+          {% else %}
+            <a href="{% url 'accounts:login' %}">Iniciar sesión</a>
+            <a href="{% url 'accounts:register' %}">Crear cuenta</a>
+          {% endif %}
+        {% endblock %}
+      </nav>
+    </div>
+  </header>
+  <main class="shell">
+    {% if messages %}
+      <ul class="messages" aria-live="polite">
+        {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

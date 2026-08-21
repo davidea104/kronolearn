@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar sesión | KronoLearn{% endblock %}
+
+{% block navigation %}<a href="{% url 'accounts:register' %}">Crear cuenta</a>{% endblock %}
+
+{% block content %}
+<section class="panel" aria-labelledby="login-title">
+  <h1 id="login-title">Iniciar sesión</h1>
+  {% if form.errors %}
+    <div class="error-summary" role="alert">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      {% if not field.is_hidden %}
+        <div>
+          {{ field.label_tag }}
+          {{ field }}
+          {{ field.errors }}
+        </div>
+      {% else %}
+        {{ field }}
+      {% endif %}
+    {% endfor %}
+    <button type="submit">Iniciar sesión</button>
+  </form>
+</section>
+{% endblock %}

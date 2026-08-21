@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Mi perfil | KronoLearn{% endblock %}
+
+{% block content %}
+<section class="panel" aria-labelledby="profile-title">
+  <h1 id="profile-title">Mi perfil</h1>
+  <dl>
+    <dt>Correo electrónico</dt>
+    <dd>{{ request.user.email }}</dd>
+    <dt>Roles</dt>
+    <dd>
+      {% if role_labels %}{{ role_labels|join:", " }}{% else %}Sin roles asignados{% endif %}
+    </dd>
+  </dl>
+  {% if form.errors %}
+    <div class="error-summary" role="alert">
+      Revisa los datos indicados.
+    </div>
+  {% endif %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div>
+      {{ form.display_name.label_tag }}
+      {{ form.display_name }}
+      {{ form.display_name.errors }}
+    </div>
+    <button type="submit">Guardar cambios</button>
+  </form>
+</section>
+{% endblock %}

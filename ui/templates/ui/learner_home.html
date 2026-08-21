@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio | KronoLearn{% endblock %}
+
+{% block content %}
+<section aria-labelledby="home-title">
+  <p class="muted">Sesión iniciada</p>
+  <h1 id="home-title">Hola, {{ request.user.display_name }}</h1>
+  <p>Tu espacio de aprendizaje está listo.</p>
+</section>
+{% endblock %}
