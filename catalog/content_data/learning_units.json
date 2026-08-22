@@ -1,0 +1,562 @@
+{
+  "tracks": [
+    {
+      "title": "Crea tu registro de gastos con agentes y SDD",
+      "description": "Construye un registro de gastos asistido y verificable.",
+      "audience": "Personas que aprenden desarrollo asistido",
+      "source": "KronoLearn curriculum 005/principal",
+      "reviewed_on": "2026-08-22",
+      "legacy_titles": [],
+      "module": {
+        "title": "Diseña el registro",
+        "objective": "Definir y validar un flujo mínimo de gastos.",
+        "source": "KronoLearn curriculum 005/principal/modulo",
+        "reviewed_on": "2026-08-22",
+        "units": [
+          {
+            "position": 1,
+            "source_marker": "KronoLearn curriculum 005/principal/01",
+            "title": "Define el problema, el usuario y el alcance mínimo",
+            "learning_objective": "Delimitar un problema de registro de gastos mediante un usuario, una necesidad y un resultado mínimo verificable.",
+            "lesson_text": "Un producto pequeño empieza con una situación concreta, no con una lista de tecnologías. Describe quién toma la decisión, qué dificultad encuentra y qué evidencia demostraría una mejora. Después reduce el alcance a un flujo que pueda recorrerse de principio a fin. Para un registro de gastos, el mínimo puede ser capturar concepto y valor, conservarlos y consultar la lista. Categorías automáticas, gráficos y recomendaciones pueden esperar. Un alcance mínimo útil mantiene el resultado central y elimina trabajo que todavía no es necesario.",
+            "case_prompt": "El Equipo Faro Ficticio quiere ayudar a una cooperativa simulada que hoy anota gastos en papeles sueltos. Debe entregar una primera versión en dos días. ¿Qué alcance inicial ofrece evidencia más clara de que el problema fue atendido?",
+            "source": "KronoLearn curriculum 005/principal/01 | Guía editorial interna sobre problema y alcance",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "Permitir registrar concepto y valor, persistir cada gasto y mostrar una lista ordenada.",
+                "rating": "OPTIMAL",
+                "consequence": "El equipo obtiene un recorrido completo y puede verificar que los datos sobreviven entre sesiones.",
+                "explanation": "La opción conserva la necesidad principal y limita el trabajo a un resultado observable de extremo a extremo."
+              },
+              {
+                "position": 2,
+                "text": "Diseñar primero un panel con seis gráficos aunque todavía no exista persistencia.",
+                "rating": "INCORRECT",
+                "consequence": "La interfaz luce avanzada, pero no demuestra que el registro de gastos funcione.",
+                "explanation": "Los gráficos dependen de datos confiables y amplían el alcance antes de validar el flujo principal."
+              },
+              {
+                "position": 3,
+                "text": "Registrar concepto, valor y diez categorías obligatorias sin construir la consulta.",
+                "rating": "PARTIAL",
+                "consequence": "Se captura información, pero el usuario no puede comprobar ni reutilizar lo registrado.",
+                "explanation": "La captura aporta valor parcial; faltan persistencia verificable y lectura del resultado."
+              },
+              {
+                "position": 4,
+                "text": "Crear autenticación, exportación, alertas y presupuestos antes del primer registro.",
+                "rating": "INCORRECT",
+                "consequence": "El plazo se consume en capacidades periféricas y el problema central queda sin validar.",
+                "explanation": "Esas capacidades pueden ser valiosas después, pero no pertenecen al alcance mínimo de esta evidencia."
+              }
+            ],
+            "lab": {
+              "objective": "Redactar un alcance mínimo verificable para un registro de gastos.",
+              "initial_prompt": "Escribe una frase de problema, identifica un usuario ficticio y define un único flujo de captura, persistencia y consulta.",
+              "expected_artifact": "Un archivo alcance.md con problema, usuario, resultado y tres exclusiones explícitas.",
+              "verification_checklist": [
+                "El usuario y la necesidad están expresados sin proponer tecnología.",
+                "El flujo mínimo tiene entrada, persistencia y salida observables.",
+                "Las capacidades aplazadas aparecen como exclusiones."
+              ]
+            },
+            "legacy_fingerprint": {
+              "title": "Del requisito al registro",
+              "learning_objective": "Definir y validar un flujo mínimo de gastos.",
+              "lesson_text": "Analiza el contexto y registra una decisión verificable.",
+              "case_prompt": "Elige la respuesta que mejor conecta evidencia y acción.",
+              "source": "KronoLearn demo",
+              "choices": [
+                {
+                  "position": 1,
+                  "text": "Opción 1",
+                  "rating": "OPTIMAL",
+                  "consequence": "La decisión produce un resultado observable.",
+                  "explanation": "Compara la decisión con el objetivo del módulo."
+                },
+                {
+                  "position": 2,
+                  "text": "Opción 2",
+                  "rating": "PARTIAL",
+                  "consequence": "La decisión produce un resultado observable.",
+                  "explanation": "Compara la decisión con el objetivo del módulo."
+                },
+                {
+                  "position": 3,
+                  "text": "Opción 3",
+                  "rating": "INCORRECT",
+                  "consequence": "La decisión produce un resultado observable.",
+                  "explanation": "Compara la decisión con el objetivo del módulo."
+                }
+              ],
+              "lab": {
+                "objective": "Aplicar la decisión en un artefacto pequeño.",
+                "initial_prompt": "Construye una primera versión verificable.",
+                "expected_artifact": "Un artefacto ejecutable con evidencia.",
+                "verification_checklist": [
+                  "Ejecuta la verificación",
+                  "Registra el resultado"
+                ]
+              }
+            }
+          },
+          {
+            "position": 2,
+            "source_marker": "KronoLearn curriculum 005/principal/02",
+            "title": "Convierte necesidades en historias y criterios verificables",
+            "learning_objective": "Escribir historias de usuario pequeñas con criterios que distingan objetivamente éxito y fallo.",
+            "lesson_text": "Una historia conecta una persona, una intención y un beneficio, pero no basta para programar con precisión. Los criterios de aceptación convierten esa intención en ejemplos observables: estado inicial, acción y resultado. Evita criterios como 'funciona bien' o 'es fácil'; usa cantidades, datos y efectos visibles. Una historia debe poder implementarse y probarse de forma independiente. Si mezcla captura, análisis, exportación y alertas, sepárala hasta que cada parte entregue una capacidad reconocible.",
+            "case_prompt": "En la empresa ficticia Taller Delta, la responsable administrativa necesita registrar un gasto y confirmar que aparece en la lista. ¿Cuál historia y criterio orientan mejor una implementación comprobable?",
+            "source": "KronoLearn curriculum 005/principal/02 | Guía editorial interna sobre historias verificables",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "Como responsable administrativa quiero registrar concepto y valor para consultar el gasto; al guardar datos válidos, la lista muestra una fila nueva con ambos valores.",
+                "rating": "OPTIMAL",
+                "consequence": "Desarrollo y revisión comparten una condición concreta de terminado.",
+                "explanation": "La historia expresa propósito y el criterio define entrada, acción y resultado observable."
+              },
+              {
+                "position": 2,
+                "text": "Como usuario quiero una aplicación moderna para gestionar todo mejor.",
+                "rating": "INCORRECT",
+                "consequence": "El equipo no sabe qué comportamiento implementar ni cómo demostrarlo.",
+                "explanation": "Los términos 'moderna', 'todo' y 'mejor' no delimitan una capacidad verificable."
+              },
+              {
+                "position": 3,
+                "text": "Crear una tabla de gastos y decidir después cómo se usará.",
+                "rating": "PARTIAL",
+                "consequence": "Existe una estructura técnica, pero no una necesidad ni un resultado acordado.",
+                "explanation": "La tabla puede ser parte de la solución, aunque no sustituye la historia ni sus criterios."
+              }
+            ],
+            "lab": {
+              "objective": "Transformar una necesidad en una historia comprobable.",
+              "initial_prompt": "Redacta una historia para consultar gastos y agrega tres criterios con ejemplos válidos, inválidos y de lista vacía.",
+              "expected_artifact": "Un archivo historia.md con una historia y tres escenarios Given-When-Then.",
+              "verification_checklist": [
+                "La historia identifica usuario, intención y beneficio.",
+                "Cada criterio contiene estado inicial, acción y resultado observable.",
+                "Los criterios evitan adjetivos subjetivos."
+              ]
+            },
+            "legacy_fingerprint": null
+          },
+          {
+            "position": 3,
+            "source_marker": "KronoLearn curriculum 005/principal/03",
+            "title": "Especifica datos, comportamiento y restricciones",
+            "learning_objective": "Definir un contrato pequeño que precise datos, reglas y errores antes de implementar.",
+            "lesson_text": "Una especificación útil reduce decisiones implícitas. Para cada dato indica tipo, obligatoriedad, límites y representación persistida. Para cada operación describe precondiciones, resultado y errores sin depender de detalles internos. Añade restricciones que protejan el sistema, como valores positivos, textos no vacíos y atomicidad. También registra lo que queda fuera. Este contrato permite que una persona o un agente construyan la misma capacidad y que las pruebas evalúen comportamiento, no coincidencias accidentales con una implementación.",
+            "case_prompt": "El proyecto ficticio Caja Clara registra gastos con concepto y valor. El equipo discute si acepta valores cero y qué ocurre cuando falta el concepto. ¿Qué especificación reduce mejor la ambigüedad?",
+            "source": "KronoLearn curriculum 005/principal/03 | Guía editorial interna sobre especificaciones",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "Definir concepto como texto no vacío, valor como decimal positivo y rechazo sin escritura cuando cualquiera sea inválido.",
+                "rating": "OPTIMAL",
+                "consequence": "Implementación y pruebas pueden verificar el mismo contrato sin inferencias.",
+                "explanation": "La opción fija datos, límites y efecto del error de manera observable."
+              },
+              {
+                "position": 2,
+                "text": "Indicar que el formulario debe ser intuitivo y dejar los límites al programador.",
+                "rating": "INCORRECT",
+                "consequence": "Distintas implementaciones aceptan datos incompatibles.",
+                "explanation": "Una cualidad subjetiva no reemplaza tipos, límites ni comportamiento de error."
+              },
+              {
+                "position": 3,
+                "text": "Enumerar concepto y valor sin explicar validación ni persistencia.",
+                "rating": "PARTIAL",
+                "consequence": "El equipo conoce los campos, pero aún decide reglas esenciales durante la codificación.",
+                "explanation": "La lista aporta vocabulario, aunque no constituye un contrato de comportamiento completo."
+              },
+              {
+                "position": 4,
+                "text": "Copiar el esquema de otra aplicación sin comprobar sus necesidades.",
+                "rating": "INCORRECT",
+                "consequence": "El producto hereda reglas que pueden contradecir el alcance acordado.",
+                "explanation": "Reutilizar una solución no valida que sus decisiones correspondan al problema actual."
+              }
+            ],
+            "lab": {
+              "objective": "Crear un contrato de datos y comportamiento para registrar gastos.",
+              "initial_prompt": "Define los campos concepto y valor, sus reglas, el resultado exitoso y tres errores esperados.",
+              "expected_artifact": "Un archivo contrato.md con tabla de campos y escenarios de éxito y rechazo.",
+              "verification_checklist": [
+                "Cada campo tiene tipo, obligatoriedad y límite.",
+                "El éxito describe un resultado persistido observable.",
+                "Los errores indican que no quedan escrituras parciales."
+              ]
+            },
+            "legacy_fingerprint": null
+          },
+          {
+            "position": 4,
+            "source_marker": "KronoLearn curriculum 005/principal/04",
+            "title": "Organiza un plan en tareas pequeñas para el agente",
+            "learning_objective": "Descomponer una especificación en tareas ordenadas, acotadas y verificables.",
+            "lesson_text": "Un plan ejecutable ordena el trabajo por dependencias y evidencia. Empieza por los contratos compartidos, continúa con pruebas que fallen por la razón esperada y termina con la implementación mínima. Cada tarea debe nombrar el archivo, el cambio y la comprobación de cierre. Separa tareas que modifican el mismo archivo y marca como paralelas solo las que no comparten estado. Los checkpoints permiten descubrir temprano una interpretación equivocada sin esperar al final del proyecto.",
+            "case_prompt": "El Equipo Prisma Ficticio debe construir captura, persistencia y listado. Tiene una tarea única llamada 'hacer la aplicación'. ¿Qué reorganización permite colaborar con un agente y revisar avances reales?",
+            "source": "KronoLearn curriculum 005/principal/04 | Guía editorial interna sobre planificación",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "Separar contrato y prueba fallida, persistencia, servicio de registro, consulta y validación final, indicando archivos y dependencias.",
+                "rating": "OPTIMAL",
+                "consequence": "Cada cambio tiene alcance y evidencia claros, y los errores se localizan temprano.",
+                "explanation": "La descomposición sigue dependencias y produce incrementos comprobables."
+              },
+              {
+                "position": 2,
+                "text": "Pedir al agente que modifique todos los archivos y revisar únicamente la pantalla final.",
+                "rating": "INCORRECT",
+                "consequence": "Los fallos de contrato o persistencia aparecen tarde y son difíciles de aislar.",
+                "explanation": "Una entrega indivisible elimina checkpoints y mezcla responsabilidades."
+              },
+              {
+                "position": 3,
+                "text": "Crear una tarea por carpeta sin describir comportamiento ni prueba.",
+                "rating": "PARTIAL",
+                "consequence": "El trabajo queda repartido, pero cada resultado continúa ambiguo.",
+                "explanation": "La ubicación ayuda, aunque falta definir qué cambia y cómo se verifica."
+              }
+            ],
+            "lab": {
+              "objective": "Descomponer una historia en tareas ejecutables.",
+              "initial_prompt": "Convierte la historia de registro de gastos en tareas de prueba, modelo, servicio y consulta, con dependencias explícitas.",
+              "expected_artifact": "Un archivo tareas.md con identificadores, rutas, orden y comando de validación por tarea.",
+              "verification_checklist": [
+                "Cada tarea cambia una responsabilidad reconocible.",
+                "Las dependencias impiden implementar antes de observar la prueba fallida.",
+                "Cada tarea incluye una comprobación de cierre."
+              ]
+            },
+            "legacy_fingerprint": null
+          },
+          {
+            "position": 5,
+            "source_marker": "KronoLearn curriculum 005/principal/05",
+            "title": "Implementa registro, listado y persistencia de gastos",
+            "learning_objective": "Conectar entrada validada, escritura transaccional y lectura ordenada en un flujo mínimo.",
+            "lesson_text": "Implementa desde el límite del dominio hacia afuera. El servicio recibe datos simples, valida el contrato y realiza la escritura dentro de una transacción. El adaptador web o de línea de comandos traduce entradas y errores, pero no duplica reglas. Para listar, consulta la persistencia con un orden explícito y entrega solo los campos necesarios. Mantén separadas la entidad mutable y la presentación. Una prueba de integración debe registrar un gasto, abrir una consulta nueva y encontrarlo; así demuestra persistencia real en lugar de conservar datos en memoria.",
+            "case_prompt": "La aplicación ficticia Monedero Boreal muestra el gasto recién creado mientras la página permanece abierta, pero desaparece al reiniciar. ¿Qué cambio atiende la causa principal?",
+            "source": "KronoLearn curriculum 005/principal/05 | Guía editorial interna sobre implementación",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "Guardar mediante un servicio transaccional en la base de datos y verificar el listado desde una consulta nueva.",
+                "rating": "OPTIMAL",
+                "consequence": "El gasto permanece disponible después de reiniciar y el flujo completo queda probado.",
+                "explanation": "La solución corrige la ausencia de persistencia y comprueba lectura independiente."
+              },
+              {
+                "position": 2,
+                "text": "Mantener una lista global en el proceso y aumentar su tamaño máximo.",
+                "rating": "INCORRECT",
+                "consequence": "Los datos siguen desapareciendo cuando termina el proceso.",
+                "explanation": "La capacidad en memoria no ofrece persistencia entre ejecuciones."
+              },
+              {
+                "position": 3,
+                "text": "Mostrar un mensaje de éxito antes de intentar guardar.",
+                "rating": "INCORRECT",
+                "consequence": "La interfaz confirma operaciones que pueden no haber ocurrido.",
+                "explanation": "El resultado debe depender del éxito de la escritura, no anticiparlo."
+              },
+              {
+                "position": 4,
+                "text": "Escribir un archivo temporal sin validación y leerlo desde la misma función.",
+                "rating": "PARTIAL",
+                "consequence": "Puede sobrevivir a una llamada, pero mezcla responsabilidades y acepta datos inválidos.",
+                "explanation": "Existe una forma de almacenamiento, aunque no respeta el contrato ni separa escritura y consulta."
+              }
+            ],
+            "lab": {
+              "objective": "Implementar un recorrido persistente mínimo.",
+              "initial_prompt": "Construye un servicio que valide y registre un gasto ficticio y una consulta que liste los gastos por fecha e identificador.",
+              "expected_artifact": "Código del servicio y una prueba de integración que registre, cierre la operación y consulte de nuevo.",
+              "verification_checklist": [
+                "La escritura válida ocurre dentro de una transacción.",
+                "Una entrada inválida no crea registros.",
+                "La consulta nueva devuelve el gasto en orden determinista."
+              ]
+            },
+            "legacy_fingerprint": null
+          },
+          {
+            "position": 6,
+            "source_marker": "KronoLearn curriculum 005/principal/06",
+            "title": "Prueba privacidad, seguridad y comportamiento",
+            "learning_objective": "Diseñar pruebas que cubran resultados, rechazos, autorización y ausencia de filtraciones.",
+            "lesson_text": "Una prueba valiosa falla cuando se rompe una regla del dominio. Empieza por el camino exitoso y agrega límites: campos vacíos, valores inválidos, revisiones obsoletas y operaciones no autorizadas. Comprueba tanto el resultado como la ausencia de efectos parciales. Para privacidad, revisa respuestas y logs: no deben revelar correos, identificadores internos, credenciales ni cadenas de conexión. Las pruebas de concurrencia deben ejecutarse en la base que ofrece los mismos locks de producción; una base ligera puede complementar, pero no sustituir esa evidencia.",
+            "case_prompt": "En el sistema ficticio Cuenta Lila, una persona sin rol recibe un error que incluye el correo de la cuenta administradora buscada. ¿Qué prueba previene mejor esta filtración?",
+            "source": "KronoLearn curriculum 005/principal/06 | Guía editorial interna sobre pruebas y privacidad",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "Comparar rechazos de referencia inválida, cuenta ausente, inactiva y sin rol, y afirmar que usan el mismo mensaje sin identificadores.",
+                "rating": "OPTIMAL",
+                "consequence": "Los estados de cuenta dejan de ser distinguibles mediante el mensaje público.",
+                "explanation": "La matriz cubre enumeración de cuentas y exposición directa de datos sensibles."
+              },
+              {
+                "position": 2,
+                "text": "Probar únicamente que el camino autorizado devuelve código de éxito.",
+                "rating": "PARTIAL",
+                "consequence": "El flujo válido queda cubierto, pero los rechazos aún pueden filtrar información.",
+                "explanation": "La prueba positiva no observa comportamiento de privacidad en errores."
+              },
+              {
+                "position": 3,
+                "text": "Registrar el correo completo para facilitar la depuración y no probar el mensaje.",
+                "rating": "INCORRECT",
+                "consequence": "Los logs conservan información identificable y aumentan el impacto de un incidente.",
+                "explanation": "La depuración no justifica exponer identidad; deben usarse eventos sanitizados."
+              },
+              {
+                "position": 4,
+                "text": "Simular todos los accesos a base de datos y asumir que los locks funcionan igual en producción.",
+                "rating": "INCORRECT",
+                "consequence": "Las carreras reales pueden pasar inadvertidas hasta el despliegue.",
+                "explanation": "Los mocks no demuestran semántica transaccional del motor autoritativo."
+              }
+            ],
+            "lab": {
+              "objective": "Construir una matriz de pruebas de seguridad y atomicidad.",
+              "initial_prompt": "Escribe pruebas para éxito, dato inválido, actor sin rol y fallo durante la escritura de un gasto ficticio.",
+              "expected_artifact": "Un módulo de pruebas que demuestre mensajes genéricos y cero escrituras parciales.",
+              "verification_checklist": [
+                "Los rechazos de identidad son observacionalmente equivalentes.",
+                "Los mensajes no contienen correo, UUID ni credenciales.",
+                "Cada fallo confirma que el conteo persistido no cambió."
+              ]
+            },
+            "legacy_fingerprint": null
+          },
+          {
+            "position": 7,
+            "source_marker": "KronoLearn curriculum 005/principal/07",
+            "title": "Despliega, verifica y evalúa el resultado",
+            "learning_objective": "Preparar un despliegue repetible con migración, carga, comprobaciones técnicas y evidencia de uso.",
+            "lesson_text": "Un despliegue confiable separa preparación y servicio. Primero aplica migraciones, luego ejecuta cargas idempotentes y solo después inicia el proceso web. La configuración sensible vive en variables privadas, nunca en argumentos, archivos versionados o mensajes. Verifica el sistema con checks, pruebas y una consulta al estado final. Finalmente observa a personas de la audiencia objetivo: mide si completan la actividad y explican su decisión. La evidencia técnica demuestra consistencia; la evaluación humana demuestra que el contenido cumple su propósito.",
+            "case_prompt": "La plataforma ficticia Ruta Cero inicia el servidor antes de migrar y cada réplica intenta cargar datos al arrancar. ¿Qué secuencia reduce mejor fallos y duplicados?",
+            "source": "KronoLearn curriculum 005/principal/07 | Guía editorial interna sobre despliegue",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "Ejecutar migraciones, realizar una carga idempotente en pre-deploy, verificar el resultado y después iniciar el servidor.",
+                "rating": "OPTIMAL",
+                "consequence": "El proceso web recibe esquema y contenido preparados una sola vez por despliegue.",
+                "explanation": "La secuencia respeta dependencias y separa mutaciones operativas del serving."
+              },
+              {
+                "position": 2,
+                "text": "Iniciar todas las réplicas y hacer que cada una migre y cargue durante su arranque.",
+                "rating": "INCORRECT",
+                "consequence": "Las réplicas compiten por esquema y contenido mientras reciben tráfico.",
+                "explanation": "Mezclar preparación y serving amplía las carreras y dificulta la recuperación."
+              },
+              {
+                "position": 3,
+                "text": "Cargar manualmente una vez y omitir verificaciones posteriores.",
+                "rating": "PARTIAL",
+                "consequence": "Puede funcionar inicialmente, pero no existe un procedimiento repetible ni evidencia del estado.",
+                "explanation": "La intervención manual no ofrece la consistencia ni trazabilidad de una operación idempotente."
+              }
+            ],
+            "lab": {
+              "objective": "Documentar y verificar una secuencia de despliegue segura.",
+              "initial_prompt": "Define comandos de migración, carga y arranque para un entorno ficticio e incluye comprobaciones antes y después.",
+              "expected_artifact": "Una guía despliegue.md con variables, comandos ordenados, resultados esperados y rollback.",
+              "verification_checklist": [
+                "La migración ocurre antes de la carga y el arranque.",
+                "La identidad autora procede de configuración privada.",
+                "La segunda carga demuestra cero cambios."
+              ]
+            },
+            "legacy_fingerprint": null
+          }
+        ]
+      }
+    },
+    {
+      "title": "Fundamentos de negocio para equipos técnicos",
+      "description": "Conecta decisiones técnicas con resultados de negocio.",
+      "audience": "Equipos técnicos",
+      "source": "KronoLearn curriculum 005/negocio",
+      "reviewed_on": "2026-08-22",
+      "legacy_titles": [
+        "Fundamentos de negocio para equipos tecnicos"
+      ],
+      "module": {
+        "title": "Habla el lenguaje del negocio",
+        "objective": "Relacionar métricas técnicas y resultados.",
+        "source": "KronoLearn curriculum 005/negocio/modulo",
+        "reviewed_on": "2026-08-22",
+        "units": [
+          {
+            "position": 1,
+            "source_marker": "KronoLearn curriculum 005/negocio/01",
+            "title": "Relaciona el problema con una propuesta de valor",
+            "learning_objective": "Explicar una decisión técnica mediante el problema que resuelve y el valor observable que produce.",
+            "lesson_text": "Una propuesta de valor conecta una dificultad relevante con un cambio que alguien puede reconocer. No empieza por la arquitectura ni por una lista de funcionalidades. Identifica quién experimenta el problema, con qué frecuencia y qué resultado mejoraría. Después explica cómo la capacidad propuesta reduce costo, tiempo, riesgo o esfuerzo. Una métrica técnica solo adquiere sentido de negocio cuando muestra esa relación; por ejemplo, menor tiempo de respuesta puede reducir abandono en un flujo crítico.",
+            "case_prompt": "El Equipo Horizonte Ficticio propone optimizar una consulta de 900 a 250 milisegundos. La dirección pregunta por qué debe priorizarla. ¿Qué respuesta comunica mejor el valor?",
+            "source": "KronoLearn curriculum 005/negocio/01 | Guía editorial interna sobre propuesta de valor",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "La mejora reduce la espera en el cierre de compra simulado y mediremos si disminuyen los abandonos del flujo.",
+                "rating": "OPTIMAL",
+                "consequence": "La decisión técnica queda vinculada a una conducta observable del usuario.",
+                "explanation": "La respuesta conecta problema, cambio técnico y resultado de negocio medible."
+              },
+              {
+                "position": 2,
+                "text": "La consulta nueva usa una técnica más avanzada y por eso debe implementarse.",
+                "rating": "INCORRECT",
+                "consequence": "La dirección no puede comparar el beneficio con otras prioridades.",
+                "explanation": "La sofisticación técnica no demuestra valor para usuarios ni organización."
+              },
+              {
+                "position": 3,
+                "text": "El tiempo baja 650 milisegundos, sin definir qué comportamiento espera cambiar.",
+                "rating": "PARTIAL",
+                "consequence": "Existe una mejora técnica cuantificada, pero su efecto de negocio continúa incierto.",
+                "explanation": "La métrica es útil, aunque falta relacionarla con un resultado relevante."
+              }
+            ],
+            "lab": null,
+            "legacy_fingerprint": {
+              "title": "Decisiones con contexto",
+              "learning_objective": "Relacionar métricas técnicas y resultados.",
+              "lesson_text": "Analiza el contexto y registra una decisión verificable.",
+              "case_prompt": "Elige la respuesta que mejor conecta evidencia y acción.",
+              "source": "KronoLearn demo",
+              "choices": [
+                {
+                  "position": 1,
+                  "text": "Opción 1",
+                  "rating": "OPTIMAL",
+                  "consequence": "La decisión produce un resultado observable.",
+                  "explanation": "Compara la decisión con el objetivo del módulo."
+                },
+                {
+                  "position": 2,
+                  "text": "Opción 2",
+                  "rating": "PARTIAL",
+                  "consequence": "La decisión produce un resultado observable.",
+                  "explanation": "Compara la decisión con el objetivo del módulo."
+                },
+                {
+                  "position": 3,
+                  "text": "Opción 3",
+                  "rating": "INCORRECT",
+                  "consequence": "La decisión produce un resultado observable.",
+                  "explanation": "Compara la decisión con el objetivo del módulo."
+                }
+              ],
+              "lab": {
+                "objective": "Aplicar la decisión en un artefacto pequeño.",
+                "initial_prompt": "Construye una primera versión verificable.",
+                "expected_artifact": "Un artefacto ejecutable con evidencia.",
+                "verification_checklist": [
+                  "Ejecuta la verificación",
+                  "Registra el resultado"
+                ]
+              }
+            }
+          },
+          {
+            "position": 2,
+            "source_marker": "KronoLearn curriculum 005/negocio/02",
+            "title": "Compara costos, ingresos y prioridad",
+            "learning_objective": "Priorizar trabajo técnico mediante impacto esperado, costo total y evidencia disponible.",
+            "lesson_text": "Priorizar no significa elegir siempre la iniciativa con mayor ingreso estimado. Compara beneficio, costo de construcción y operación, riesgo y oportunidad de aprender. Expresa supuestos como rangos y señala qué dato podría cambiar la decisión. El costo total incluye mantenimiento, soporte e infraestructura, no solo horas iniciales. Cuando la incertidumbre es alta, una prueba pequeña puede ser más valiosa que una implementación completa porque compra evidencia antes de comprometer recursos.",
+            "case_prompt": "La empresa ficticia Mercado Aurora evalúa dos mejoras: una automatización de ocho semanas con ahorro incierto y una prueba de una semana que mide el mismo supuesto con un grupo simulado. ¿Qué decisión es más responsable hoy?",
+            "source": "KronoLearn curriculum 005/negocio/02 | Guía editorial interna sobre priorización",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "Ejecutar la prueba de una semana, definir el umbral de ahorro y reevaluar la automatización con esa evidencia.",
+                "rating": "OPTIMAL",
+                "consequence": "El equipo reduce incertidumbre antes de asumir el costo mayor.",
+                "explanation": "La opción vincula inversión gradual con un criterio explícito para continuar."
+              },
+              {
+                "position": 2,
+                "text": "Construir las ocho semanas porque la automatización suena más completa.",
+                "rating": "INCORRECT",
+                "consequence": "La organización compromete recursos antes de validar el supuesto de ahorro.",
+                "explanation": "La amplitud de la solución no compensa la falta de evidencia sobre su beneficio."
+              },
+              {
+                "position": 3,
+                "text": "Cancelar ambas opciones porque toda estimación contiene incertidumbre.",
+                "rating": "INCORRECT",
+                "consequence": "El equipo evita el riesgo, pero también renuncia a obtener información útil.",
+                "explanation": "La incertidumbre se gestiona con experimentos acotados, no necesariamente con inacción."
+              },
+              {
+                "position": 4,
+                "text": "Elegir la prueba corta, pero sin definir qué resultado justificaría continuar.",
+                "rating": "PARTIAL",
+                "consequence": "Se reduce el costo inicial, aunque la decisión posterior seguirá siendo subjetiva.",
+                "explanation": "El experimento necesita un umbral acordado para producir evidencia accionable."
+              }
+            ],
+            "lab": null,
+            "legacy_fingerprint": null
+          },
+          {
+            "position": 3,
+            "source_marker": "KronoLearn curriculum 005/negocio/03",
+            "title": "Comunica riesgos a áreas no técnicas",
+            "learning_objective": "Presentar un riesgo técnico con probabilidad, impacto, opciones y recomendación comprensible.",
+            "lesson_text": "Comunicar riesgo no es enumerar fallos posibles ni ocultarlos detrás de jerga. Describe el evento, su probabilidad estimada, el impacto sobre usuarios u operación y la ventana de decisión. Distingue hechos de supuestos y ofrece opciones con costo y riesgo residual. Cierra con una recomendación y una señal que indique cuándo revisarla. Una comunicación breve permite que áreas técnicas y no técnicas compartan la decisión sin fingir certeza absoluta.",
+            "case_prompt": "El servicio ficticio Puente Verde depende de un componente que dejará de recibir soporte en tres meses. Aún funciona y no hay incidentes. ¿Cómo debe comunicarlo el equipo técnico?",
+            "source": "KronoLearn curriculum 005/negocio/03 | Guía editorial interna sobre riesgo y comunicación",
+            "reviewed_on": "2026-08-22",
+            "choices": [
+              {
+                "position": 1,
+                "text": "Explicar fecha de fin de soporte, impacto potencial, opciones de migración, costo aproximado y recomendar una prueba antes del próximo ciclo.",
+                "rating": "OPTIMAL",
+                "consequence": "Las áreas involucradas pueden decidir con tiempo y entender el riesgo residual.",
+                "explanation": "La comunicación combina evidencia, impacto, alternativas y una recomendación accionable."
+              },
+              {
+                "position": 2,
+                "text": "Informar que existe una deuda técnica crítica sin describir efectos ni alternativas.",
+                "rating": "PARTIAL",
+                "consequence": "La urgencia se comunica, pero no hay base para priorizar ni actuar.",
+                "explanation": "La etiqueta técnica necesita contexto de impacto y opciones para apoyar una decisión."
+              },
+              {
+                "position": 3,
+                "text": "Esperar al primer incidente porque el componente todavía funciona.",
+                "rating": "INCORRECT",
+                "consequence": "La organización pierde la ventana de preparación y deberá reaccionar bajo presión.",
+                "explanation": "La ausencia de incidentes actuales no elimina un riesgo con fecha conocida."
+              }
+            ],
+            "lab": null,
+            "legacy_fingerprint": null
+          }
+        ]
+      }
+    }
+  ]
+}
