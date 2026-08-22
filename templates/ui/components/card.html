@@ -1,0 +1,19 @@
+{# card.html #}
+{# Contenedor con borde, fondo blanco, sombra #}
+{# Parámetros: content (required, will not be escaped), variant (default: default), class (optional) #}
+<div class="card {% if variant == 'raised' %}card--raised{% else %}card--default{% endif %} {{ class }}">
+  {{ content|safe }}
+</div>
+
+<style>
+  .card {
+    background: var(--paper);
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-hard);
+  }
+  .card--raised {
+    box-shadow: 8px 8px 0 0 #000000;
+  }
+</style>

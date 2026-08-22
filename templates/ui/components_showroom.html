@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Componentes - KronoLearn{% endblock %}
+{% block content %}
+<h1>Galería de Componentes</h1>
+<p class="muted">Esta página solo es visible en modo DEBUG.</p>
+
+<section style="margin-bottom: 3rem;">
+  <h2>1. Botones</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+    <div>
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.5rem;">Primary</p>
+      {% include "ui/components/button.html" with label="Guardar" type="submit" %}
+    </div>
+    <div>
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.5rem;">Outline</p>
+      {% include "ui/components/button.html" with label="Cancelar" variant="outline" %}
+    </div>
+    <div>
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.5rem;">Link</p>
+      {% include "ui/components/button.html" with label="Enlace" href="/" %}
+    </div>
+  </div>
+</section>
+
+<section style="margin-bottom: 3rem;">
+  <h2>2. Eyebrow (Etiqueta de sección)</h2>
+  <div style="margin-top: 1rem;">
+    {% include "ui/components/eyebrow.html" with text="MÓDULO 1 · SESIÓN 2" %}
+  </div>
+</section>
+
+<section style="margin-bottom: 3rem;">
+  <h2>3. Cards</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+    <div>
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.5rem;">Default</p>
+      {% include "ui/components/card.html" with content="<h3>Card Title</h3><p>Esta es una card con estilo neo-brutalista.</p>" variant="default" %}
+    </div>
+    <div>
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.5rem;">Raised</p>
+      {% include "ui/components/card.html" with content="<h3>Card Raised</h3><p>Esta card tiene más elevación visual.</p>" variant="raised" %}
+    </div>
+  </div>
+</section>
+
+<section style="margin-bottom: 3rem;">
+  <h2>4. Choice Options (5 estados)</h2>
+  <div style="max-width: 400px; margin-top: 1rem;">
+    <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.75rem;">Default</p>
+    {% include "ui/components/choice_option.html" with name="test_option" value="opt1" label="Opción sin seleccionar" state="default" %}
+    
+    <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.75rem; margin-top: 1rem;">Selected</p>
+    {% include "ui/components/choice_option.html" with name="test_option" value="opt2" label="Opción seleccionada" state="selected" checked=True %}
+    
+    <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.75rem; margin-top: 1rem;">Optimal (Correct)</p>
+    {% include "ui/components/choice_option.html" with name="test_option" value="opt3" label="Respuesta correcta" state="optimal" %}
+    
+    <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.75rem; margin-top: 1rem;">Partial</p>
+    {% include "ui/components/choice_option.html" with name="test_option" value="opt4" label="Respuesta parcial" state="partial" %}
+    
+    <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.75rem; margin-top: 1rem;">Incorrect</p>
+    {% include "ui/components/choice_option.html" with name="test_option" value="opt5" label="Respuesta incorrecta" state="incorrect" %}
+  </div>
+</section>
+
+<section style="margin-bottom: 3rem;">
+  <h2>5. Progress Bar</h2>
+  <div style="max-width: 500px; margin-top: 1rem;">
+    {% include "ui/components/progress_bar.html" with value=35 label="Progreso del módulo" %}
+  </div>
+  <div style="max-width: 500px; margin-top: 1rem;">
+    {% include "ui/components/progress_bar.html" with value=100 %}
+  </div>
+</section>
+
+<section style="margin-bottom: 3rem;">
+  <h2>6. Stats</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+    <div>
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.5rem;">Default</p>
+      {% include "ui/components/stat.html" with number=42 label="Módulos" %}
+    </div>
+    <div>
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.5rem;">Green Accent</p>
+      {% include "ui/components/stat.html" with number=28 label="Completados" accent="green" %}
+    </div>
+    <div>
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 0.5rem;">Lavender Accent</p>
+      {% include "ui/components/stat.html" with number=3 label="En progreso" accent="lavender" %}
+    </div>
+  </div>
+</section>
+
+<section style="margin-bottom: 3rem;">
+  <h2>7. Step Numbers</h2>
+  <div style="max-width: 400px; margin-top: 1rem;">
+    {% include "ui/components/step_number.html" with number=1 label="Crea tu perfil" %}
+    {% include "ui/components/step_number.html" with number=2 label="Explora los tracks" %}
+    {% include "ui/components/step_number.html" with number=3 label="Comienza a aprender" %}
+  </div>
+</section>
+
+<section style="margin-bottom: 3rem;">
+  <h2>8. Empty State</h2>
+  <div style="max-width: 500px; margin-top: 1rem; background: var(--divider); padding: 2rem; border-radius: var(--border-radius);">
+    {% include "ui/components/empty_state.html" with icon="📚" headline="No hay módulos" message="Crea tu primer módulo para comenzar." action_label="Nuevo módulo" action_href="/modules/new" %}
+  </div>
+</section>
+
+<section style="margin-bottom: 3rem;">
+  <h2>9. Alerts (4 tipos)</h2>
+  <div style="max-width: 500px; margin-top: 1rem;">
+    {% include "ui/components/alert.html" with message="¡Cambios guardados correctamente!" type="success" %}
+    {% include "ui/components/alert.html" with message="Hubo un error al procesar tu solicitud." type="error" %}
+    {% include "ui/components/alert.html" with message="Esta es una información importante." type="info" %}
+    {% include "ui/components/alert.html" with message="Cuidado: esta acción no se puede deshacer." type="warning" %}
+  </div>
+</section>
+
+{% endblock %}

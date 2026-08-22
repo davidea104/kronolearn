@@ -1,21 +1,113 @@
 {% extends "base.html" %}
 {% block title %}Módulo | KronoLearn{% endblock %}
 {% block content %}
-<main>
+<div class="form-header">
   <h1>{% if module %}Editar módulo{% else %}Crear módulo{% endif %}</h1>
-  {% if form.errors or publication_form.errors %}
-  <div class="error-summary" role="alert" tabindex="-1">
-    <h2>Revisa los datos ingresados</h2>
-    {{ form.non_field_errors }}
-    {% if publication_form %}{{ publication_form.non_field_errors }}{% endif %}
-  </div>
+</div>
+
+{% if form.errors or publication_form.errors %}
+<div class="error-summary" role="alert" tabindex="-1">
+  <h2>Revisa los datos ingresados</h2>
+  {{ form.non_field_errors }}
+  {% if publication_form %}{{ publication_form.non_field_errors }}{% endif %}
+</div>
+{% endif %}
+
+<form method="post" class="form-layout">
+  {% csrf_token %}
+  <fieldset>
+    <legend class="sr-only">Información de módulo</legend>
+    {% for field in form %}
+      {% if not field.is_hidden %}
+        <div class="field-group">
+          {{ field.label_tag }}
+          <div class="field-input">
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <div class="field-error">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% else %}
+        {{ field }}
+      {% endif %}
+    {% endfor %}
+  </fieldset>
+
+  {% if module.status == "ACTIVE" %}
+  <fieldset>
+    <legend class="sr-only">Información de publicación</legend>
+    {% for field in publication_form %}
+      {% if not field.is_hidden %}
+        <div class="field-group">
+          {{ field.label_tag }}
+          <div class="field-input">
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <div class="field-error">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% else %}
+        {{ field }}
+      {% endif %}
+    {% endfor %}
+  </fieldset>
   {% endif %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {% if module.status == "ACTIVE" %}{{ publication_form.as_p }}{% endif %}
-    <button type="submit">Guardar</button>
-  </form>
-  {% if track %}<a href="{% url 'catalog:manage-module-list' track.pk %}">Volver a módulos</a>{% endif %}
-</main>
+
+  <div class="form-actions">
+    {% include "ui/components/button.html" with label="Guardar" type="submit" %}
+    {% if track %}<a href="{% url 'catalog:manage-module-list' track.pk %}" class="button button--outline">Cancelar</a>{% endif %}
+  </div>
+</form>
+
+<style>
+  .form-header {
+    margin-bottom: 2rem;
+  }
+  .form-layout {
+    max-width: 600px;
+    margin: 0;
+  }
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 2rem 0 0 0;
+  }
+  legend {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .field-group {
+    margin-bottom: 1.5rem;
+  }
+  .field-input {
+    margin-top: 0.25rem;
+  }
+  .field-error {
+    color: var(--accent-red);
+    font-size: 14px;
+    margin-top: 0.25rem;
+  }
+  .error-summary {
+    background: #FAFAFA;
+    border-left: 4px solid var(--accent-red);
+    color: var(--accent-red);
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+  }
+  .error-summary h2 {
+    font-size: 18px;
+    margin: 0 0 0.5rem 0;
+  }
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--divider);
+  }
+</style>
 {% endblock %}

@@ -5,7 +5,7 @@
 {% block content %}
 <section class="panel" aria-labelledby="profile-title">
   <h1 id="profile-title">Mi perfil</h1>
-  <dl>
+  <dl class="definition-list">
     <dt>Correo electrónico</dt>
     <dd>{{ request.user.email }}</dd>
     <dt>Roles</dt>
@@ -20,12 +20,48 @@
   {% endif %}
   <form method="post" novalidate>
     {% csrf_token %}
-    <div>
+    <div class="field-group">
       {{ form.display_name.label_tag }}
-      {{ form.display_name }}
-      {{ form.display_name.errors }}
+      <div class="field-input">
+        {{ form.display_name }}
+      </div>
+      {% if form.display_name.errors %}
+        <div class="field-error">{{ form.display_name.errors }}</div>
+      {% endif %}
     </div>
-    <button type="submit">Guardar cambios</button>
+    {% include "ui/components/button.html" with label="Guardar cambios" type="submit" %}
   </form>
 </section>
+
+<style>
+  .definition-list {
+    border: 1px solid var(--divider);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .definition-list dt {
+    font-weight: 700;
+    margin-top: 1rem;
+  }
+  .definition-list dt:first-child {
+    margin-top: 0;
+  }
+  .definition-list dd {
+    margin: 0.25rem 0 0 0;
+    color: var(--ink-secondary);
+  }
+  .field-group {
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+  }
+  .field-input {
+    margin-top: 0.25rem;
+  }
+  .field-error {
+    color: var(--accent-red);
+    font-size: 14px;
+    margin-top: 0.25rem;
+  }
+</style>
 {% endblock %}

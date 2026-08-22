@@ -5,17 +5,21 @@
 {% block content %}
 <section aria-labelledby="roles-title">
   <h1 id="roles-title">Gestión de roles</h1>
-  <form method="get" novalidate>
-    <div>
+  <form method="get" novalidate class="search-form">
+    <div class="field-group">
       {{ form.q.label_tag }}
-      {{ form.q }}
-      {{ form.q.errors }}
+      <div class="field-input">
+        {{ form.q }}
+      </div>
+      {% if form.q.errors %}
+        <div class="field-error">{{ form.q.errors }}</div>
+      {% endif %}
     </div>
-    <button type="submit">Buscar</button>
+    {% include "ui/components/button.html" with label="Buscar" type="submit" %}
   </form>
 
   <div class="table-scroll">
-    <table>
+     <table>
       <thead>
         <tr>
           <th scope="col">Cuenta</th>
@@ -39,14 +43,14 @@
             <td>
               {% if account.pk != request.user.pk %}
                 {% if account.has_content_role %}
-                  <form method="post" action="{% url 'accounts:revoke-content-role' account.pk %}">
+                  <form method="post" action="{% url 'accounts:revoke-content-role' account.pk %}" class="inline-action">
                     {% csrf_token %}
-                    <button type="submit">Retirar rol de contenido</button>
+                    {% include "ui/components/button.html" with label="Retirar rol" type="submit" variant="outline" %}
                   </form>
                 {% else %}
-                  <form method="post" action="{% url 'accounts:assign-content-role' account.pk %}">
+                  <form method="post" action="{% url 'accounts:assign-content-role' account.pk %}" class="inline-action">
                     {% csrf_token %}
-                    <button type="submit">Asignar rol de contenido</button>
+                    {% include "ui/components/button.html" with label="Asignar rol" type="submit" %}
                   </form>
                 {% endif %}
               {% else %}
@@ -55,22 +59,117 @@
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="4">No se encontraron cuentas.</td></tr>
+          <tr><td colspan="4" class="empty-cell">No se encontraron cuentas.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 
   {% if page_obj.has_previous or page_obj.has_next %}
-    <nav aria-label="Paginación">
+    <nav aria-label="Paginación" class="pagination">
       {% if page_obj.has_previous %}
-        <a href="?q={{ form.q.value|default:''|urlencode }}&amp;page={{ page_obj.previous_page_number }}">Anterior</a>
+        <a href="?q={{ form.q.value|default:''|urlencode }}&amp;page={{ page_obj.previous_page_number }}" class="pagination-link">← Anterior</a>
       {% endif %}
-      <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      <span class="pagination-info">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
       {% if page_obj.has_next %}
-        <a href="?q={{ form.q.value|default:''|urlencode }}&amp;page={{ page_obj.next_page_number }}">Siguiente</a>
+        <a href="?q={{ form.q.value|default:''|urlencode }}&amp;page={{ page_obj.next_page_number }}" class="pagination-link">Siguiente →</a>
       {% endif %}
     </nav>
   {% endif %}
 </section>
+
+<style>
+  .search-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .search-form .field-group {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  .field-group {
+    margin-bottom: 1rem;
+  }
+  .field-input {
+    margin-top: 0.25rem;
+  }
+  .field-error {
+    color: var(--accent-red);
+    font-size: 14px;
+    margin-top: 0.25rem;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+  }
+  .data-table th {
+    background: var(--paper);
+    border: 2px solid var(--border);
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .data-table td {
+    border: 1px solid var(--divider);
+    padding: 0.75rem;
+    font-size: 16px;
+  }
+  .data-table tr:hover td {
+    background: #FAFAFA;
+  }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    table th {
+      background: var(--paper);
+      border: 2px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    table td {
+      border: 1px solid var(--divider);
+      padding: 0.75rem;
+      font-size: 16px;
+    }
+    table tr:hover td {
+      background: #FAFAFA;
+    }
+  .empty-cell {
+    text-align: center;
+    color: var(--ink-secondary);
+  }
+  .inline-action {
+    display: inline-block;
+    margin: 0;
+  }
+  .inline-action .button-wrapper {
+    display: inline-block;
+  }
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  .pagination-link {
+    text-decoration: none;
+    padding: 0.5rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .pagination-info {
+    font-size: 14px;
+    color: var(--ink-secondary);
+  }
+</style>
 {% endblock %}

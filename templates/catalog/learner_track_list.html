@@ -3,16 +3,58 @@
 {% block content %}
 <section aria-labelledby="catalog-title">
   <h1 id="catalog-title">Rutas de aprendizaje</h1>
-  <ol>
+  {% if tracks %}
+  <div class="track-grid">
     {% for track in tracks %}
-    <li>
-      <h2><a href="{% url 'catalog:track-detail' track.pk %}">{{ track.title }}</a></h2>
+    <div class="track-card">
+      <h3><a href="{% url 'catalog:track-detail' track.pk %}">{{ track.title }}</a></h3>
       <p>{{ track.description }}</p>
-      <p><strong>Audiencia:</strong> {{ track.audience }}</p>
-    </li>
-    {% empty %}
-    <li>No hay rutas disponibles.</li>
+      <p><strong>Audiencia:</strong> <span class="muted">{{ track.audience }}</span></p>
+    </div>
     {% endfor %}
-  </ol>
+  </div>
+  {% else %}
+    {% include "ui/components/empty_state.html" with icon="📚" headline="Sin rutas disponibles" message="No hay rutas de aprendizaje configuradas." %}
+  {% endif %}
 </section>
+
+<style>
+  .track-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  .track-card {
+    padding: 1.5rem;
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--paper);
+    box-shadow: var(--shadow-hard);
+    display: flex;
+    flex-direction: column;
+  }
+  .track-card h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 20px;
+  }
+  .track-card h3 a {
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .track-card h3 a:hover {
+    text-decoration: underline;
+  }
+  .track-card h3 a:focus-visible {
+    outline: 2px solid var(--border);
+    outline-offset: 2px;
+  }
+  .track-card p {
+    margin: 0.5rem 0;
+    font-size: 16px;
+  }
+  .track-card p:last-child {
+    margin-bottom: 0;
+  }
+</style>
 {% endblock %}

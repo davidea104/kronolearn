@@ -1,17 +1,93 @@
 {% extends "base.html" %}
 {% block title %}Tracks | KronoLearn{% endblock %}
 {% block content %}
-<main>
-  <header>
+<div class="admin-header">
+  <div>
     <h1>Tracks</h1>
-    <a href="{% url 'catalog:manage-track-create' %}">Crear track</a>
-  </header>
-  {% if messages %}<div role="status">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
-  {% if state_form and state_form.errors %}<div role="alert">{{ state_form.errors }}</div>{% endif %}
-  {% if position_form and position_form.errors %}<div role="alert">{{ position_form.errors }}</div>{% endif %}
-  <table>
-    <thead><tr><th>Título</th><th>Estado</th><th>Posición</th><th>Acciones</th></tr></thead>
-    <tbody id="track-rows">{% include "catalog/partials/track_rows.html" %}</tbody>
+  </div>
+  <div class="admin-actions">
+    <a href="{% url 'catalog:manage-track-create' %}" class="button">Crear track</a>
+  </div>
+</div>
+
+{% if messages %}<div role="status" class="messages-box">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+{% if state_form and state_form.errors %}<div role="alert" class="error-box">{{ state_form.errors }}</div>{% endif %}
+{% if position_form and position_form.errors %}<div role="alert" class="error-box">{{ position_form.errors }}</div>{% endif %}
+
+<div class="table-wrapper">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th scope="col">Título</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Posición</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="track-rows">
+      {% include "catalog/partials/track_rows.html" %}
+    </tbody>
   </table>
-</main>
+</div>
+
+<style>
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+  .admin-header h1 {
+    margin: 0;
+  }
+  .admin-actions {
+    display: flex;
+    gap: 1rem;
+  }
+  .messages-box, .error-box {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    border-left: 4px solid;
+  }
+  .messages-box {
+    border-left-color: var(--accent-green);
+    background: #FAFAFA;
+  }
+  .error-box {
+    border-left-color: var(--accent-red);
+    background: #FAFAFA;
+    color: var(--accent-red);
+  }
+  .table-wrapper {
+    overflow-x: auto;
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    margin: 2rem 0;
+  }
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .admin-table th {
+    background: var(--paper);
+    border-bottom: 2px solid var(--border);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .admin-table td {
+    border-bottom: 1px solid var(--divider);
+    padding: 1rem;
+    font-size: 16px;
+  }
+  .admin-table tr:last-child td {
+    border-bottom: none;
+  }
+  .admin-table tbody tr:hover td {
+    background: #FAFAFA;
+  }
+</style>
 {% endblock %}
