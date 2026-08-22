@@ -37,8 +37,8 @@ El resultado conserva el orden del servicio y publica por fila:
 - `module_count`.
 
 La vista no importa modelos de `learning` ni `catalog`, no cuenta relaciones y no
-aplica filtros adicionales. Los prerequisitos exactos están en
-[../research.md](../research.md#prerequisitos-de-implementación).
+aplica filtros adicionales. Los contratos fundacionales están documentados en
+[../research.md](../research.md#contratos-fundacionales-implementados).
 
 ## Contexto de plantilla
 

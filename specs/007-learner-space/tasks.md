@@ -9,14 +9,14 @@ su contrato o prueba de regresión y ninguna tarea se completa sin ejecutar la
 comprobación que le corresponde.
 
 **Organization**: Las tareas se agrupan por historia para conservar incrementos
-independientemente verificables. Ninguna tarea autoriza cambios en servicios, URLs,
-settings, modelos, migraciones, componentes ni archivos de la feature 004.
+independientemente verificables. T002 autoriza el puente fundacional mínimo; ninguna
+tarea autoriza cambios en settings, modelos, migraciones ni componentes existentes.
 
 ## Phase 1: Setup (Shared Infrastructure)
 
 **Purpose**: Confirmar el contexto de ejecución y el alcance antes de tocar código.
 
-- [ ] T001 Confirmar la rama `007-learner-space`, el árbol limpio y la lista cerrada de archivos de implementación descrita en specs/007-learner-space/plan.md
+- [x] T001 Confirmar la rama `007-learner-space`, el árbol limpio y la lista cerrada de archivos de implementación descrita en specs/007-learner-space/plan.md
 
 **Checkpoint**: El trabajo comienza desde la rama correcta y cualquier cambio
 preexistente fuera del alcance está identificado y preservado.
@@ -25,13 +25,11 @@ preexistente fuera del alcance está identificado y preservado.
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Verificar las superficies publicadas que todas las historias necesitan.
+**Purpose**: Completar las superficies publicadas que todas las historias necesitan.
 
-**CRITICAL**: No iniciar tareas de historias hasta completar esta fase. Si falla,
-detener la implementación y resolver el contrato en su feature propietaria; no
-editar archivos externos desde la 007.
+**CRITICAL**: No iniciar tareas de historias hasta completar esta fase.
 
-- [ ] T002 Verificar los tres prerequisitos de `list_enrollments` y `learning:session-current` ejecutando las comprobaciones de specs/007-learner-space/quickstart.md sin modificar learning/services/enrollment.py ni learning/urls/session.py
+- [x] T002 Implementar mediante TDD los contratos fundacionales faltantes: revalidar la cuenta persistida y anotar `module_count` sin N+1 en learning/services/enrollment.py; publicar `learning:session-current(track_id)` como placeholder protegido con respuesta 200 en learning/urls/session.py, learning/views/session/current.py y templates/learning/session/current.html; cubrir ambos contratos en tests/learning/test_enrollment_contracts.py y tests/learning/session/test_current_placeholder.py
 
 **Checkpoint**: `list_enrollments` revalida cuenta activa, publica `module_count` sin
 N+1 y `learning:session-current` revierte con `track_id`.
@@ -49,11 +47,11 @@ del track correspondiente sin mostrar métricas fuera de alcance.
 
 ### Tests for User Story 1
 
-- [ ] T003 [US1] Añadir primero pruebas fallidas para listado propio, conteos cero y múltiple, títulos iguales con enlaces distintos, escape de markup y ausencia de métricas en tests/ui/test_learner_home.py
+- [x] T003 [US1] Añadir primero pruebas fallidas para listado propio, conteos cero y múltiple, títulos iguales con enlaces distintos, escape de markup y ausencia de métricas en tests/ui/test_learner_home.py
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] Actualizar `learner_home` para consumir una vez `list_enrollments(request.user)` en ui/views.py, crear el listado con card y button en templates/ui/learner_home.html, eliminar ui/templates/ui/learner_home.html y ejecutar las pruebas de US1
+- [x] T004 [US1] Actualizar `learner_home` para consumir una vez `list_enrollments(request.user)` en ui/views.py, ampliar de forma compatible la API estructurada de templates/ui/components/card.html, crear el listado con card y button en templates/ui/learner_home.html, eliminar ui/templates/ui/learner_home.html y ejecutar las pruebas de US1
 
 **Checkpoint**: US1 funciona y se prueba de forma independiente; `/learn/` ya permite
 elegir cualquiera de los tracks inscritos.
@@ -90,7 +88,7 @@ recibe contenido privado y un login válido aterriza en `/learn/`.
 
 ### Tests for User Story 3
 
-- [ ] T007 [US3] Añadir y ejecutar pruebas de regresión para aislamiento entre dos cuentas, anónimo con `next=/learn/`, cuenta inactiva y destino de login en tests/ui/test_learner_home.py sin modificar autenticación, settings ni URLs
+- [x] T007 [US3] Añadir y ejecutar pruebas de regresión para aislamiento entre dos cuentas, anónimo con `next=/learn/`, cuenta inactiva y destino de login en tests/ui/test_learner_home.py sin modificar autenticación, settings ni URLs
 
 **Checkpoint**: US3 queda verificada sin introducir una segunda decisión de
 autorización en la vista o la plantilla.
@@ -101,7 +99,7 @@ autorización en la vista o la plantilla.
 
 **Purpose**: Verificar el incremento completo, su accesibilidad y su alcance.
 
-- [ ] T008 Ejecutar la suite enfocada, Django check, Ruff, revisión de teclado y zoom, y confirmar con `git diff --name-only` el alcance definido en specs/007-learner-space/quickstart.md
+- [x] T008 Ejecutar la suite enfocada, Django check, Ruff, revisión de teclado y zoom, y confirmar con `git diff --name-only` el alcance definido en specs/007-learner-space/quickstart.md
 
 **Checkpoint**: Todos los criterios automatizados pasan, la pantalla es operable por
 teclado y no hay cambios fuera de los archivos autorizados.
@@ -201,10 +199,20 @@ eliminar son:
 ```text
 ui/views.py
 templates/ui/learner_home.html
+templates/ui/components/card.html
 ui/templates/ui/learner_home.html
 tests/ui/
+learning/services/enrollment.py
+learning/urls/session.py
+learning/views/session/current.py
+templates/learning/session/current.html
+tests/learning/test_enrollment_contracts.py
+tests/learning/session/test_current_placeholder.py
+tests/integration/test_root_contracts.py
+docs/contracts/domain-contracts.md
+CHANGELOG.md
 ```
 
-Los documentos bajo `specs/007-learner-space/` pertenecen al flujo Spec Kit. Si T002
-falla, se detiene esta rama; el prerequisito se corrige y fusiona desde su propietario
-antes de reanudar `/speckit-implement`.
+Los documentos bajo `specs/007-learner-space/` pertenecen al flujo Spec Kit. T002 no
+implementa `enroll()` ni selección de contenido; la spec 009 reemplazará el
+placeholder conservando `learning:session-current(track_id)`.

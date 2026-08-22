@@ -4,6 +4,7 @@ from django.conf import settings
 from django.shortcuts import render
 
 from accounts.security import active_account_required
+from learning.services.enrollment import list_enrollments
 
 
 def index(request):
@@ -12,7 +13,11 @@ def index(request):
 
 @active_account_required
 def learner_home(request):
-    return render(request, "ui/learner_home.html")
+    return render(
+        request,
+        "ui/learner_home.html",
+        {"enrollments": list_enrollments(request.user)},
+    )
 
 
 def components_showroom(request):

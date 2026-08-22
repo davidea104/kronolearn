@@ -2,11 +2,11 @@
 
 ## Proyección publicada de inscripciones
 
-**Decision**: La feature consumirá exclusivamente
-`learning.services.enrollment.list_enrollments(request.user)`. Antes de implementar,
-el contrato base debe mantener su orden estable y `select_related("track")`, excluir
-resultados cuando la cuenta ya no esté activa y publicar un atributo entero
-`module_count` por inscripción con el total actual de módulos del track.
+**Decision**: La feature consume exclusivamente
+`learning.services.enrollment.list_enrollments(request.user)`. Su tarea fundacional
+mantiene el orden estable y `select_related("track")`, rechaza la operación cuando
+la cuenta persistida ya no está activa y publica un atributo entero `module_count`
+por inscripción con el total actual de módulos del track.
 
 **Rationale**: El servicio actual ya aísla por cuenta, pero no vuelve a comprobar
 `Account.is_active` ni proyecta el conteo exigido por FR-003. Publicar ambos datos en
@@ -17,16 +17,16 @@ y una consulta adicional por cada track.
 
 - Usar `enrollment.track.modules.count()` en la vista o plantilla: rechazado porque
   el dato no proviene del servicio publicado y produce consultas N+1.
-- Modificar `learning/services/enrollment.py` dentro de la 007: rechazado porque el
-  archivo está cerrado y también pertenece al flujo de inscripción de la 008.
+- Implementar `enroll()` junto con la proyección: rechazado porque el flujo de
+  inscripción pertenece a la 008 y no es necesario para esta pantalla de lectura.
 - Omitir el conteo: rechazado porque incumple FR-003.
 
 ## Destino de la sesión del día
 
-**Decision**: La tarjeta revertirá `learning:session-current` con el argumento
-nombrado `track_id`. La ruta debe estar publicada antes de implementar la 007; el
-comportamiento de selección y renderizado de la sesión sigue siendo propiedad de la
-009 y se valida de extremo a extremo después de integrar ambas features.
+**Decision**: La tarjeta revierte `learning:session-current` con el argumento
+nombrado `track_id`. La tarea fundacional publica una vista temporal protegida con
+respuesta `200`; la selección y el renderizado real de la sesión siguen siendo
+propiedad de la 009, que reemplazará el cuerpo conservando nombre y argumento.
 
 **Rationale**: La 004 reservó el namespace y el include `learn/session/`, pero el
 módulo hoja actual tiene `urlpatterns = []`. Un nombre reversible permite que la
@@ -36,22 +36,19 @@ módulo hoja actual tiene `urlpatterns = []`. Un nombre reversible permite que l
 
 - Codificar una URL literal: rechazado porque inventaría una superficie no
   publicada y podría divergir de la 009.
-- Añadir la ruta o una vista temporal desde la 007: rechazado por propiedad de
-  archivos y por solaparse con la 009.
+- Implementar ya la selección de sesión: rechazado porque se solaparía con la 009.
 - Enlazar al detalle del catálogo: rechazado porque no conduce a la sesión del día.
 
 ## Composición de la interfaz
 
-**Decision**: Cada entrada será un `article` que compone los parciales existentes
-`ui/components/card.html` y `ui/components/button.html`; el estado sin resultados
-usará `ui/components/empty_state.html`. El contenido dinámico enviado a
-`card.html` debe escapar el título antes de llegar a su parámetro `content`, porque
-ese parcial aplica `safe`. La cantidad numérica y la acción pertenecen al mismo
-grupo accesible, sin duplicar el markup de los componentes.
+**Decision**: Cada entrada usa `ui/components/card.html`, que conserva `content` y
+añade una API estructurada compatible para título, metadatos y acción. Esa rama
+escapa el título automáticamente e incluye `ui/components/button.html`; el estado
+sin resultados usa `ui/components/empty_state.html`.
 
 **Rationale**: Esta composición respeta el inventario visual existente y evita
-crear un componente fuera del alcance cerrado. El escape explícito impide que un
-título administrable se interprete como HTML.
+construir HTML en Python. La rama estructurada impide que un título administrable
+pase por el parámetro histórico `content|safe`.
 
 **Alternatives considered**:
 
@@ -97,9 +94,9 @@ paquete en ambos motores.
 - Pruebas de navegador como única evidencia: rechazadas porque los criterios
   principales son verificables con respuestas HTML y resolución de URLs.
 
-## Prerequisitos de implementación
+## Contratos fundacionales implementados
 
-Los siguientes contratos deben existir antes de `/speckit-implement`:
+T002 implementa y prueba los siguientes contratos antes de las historias:
 
 1. `list_enrollments(account)` no devuelve inscripciones si la cuenta persistida no
    está activa.
@@ -107,5 +104,4 @@ Los siguientes contratos deben existir antes de `/speckit-implement`:
    adicionales por track.
 3. `reverse("learning:session-current", kwargs={"track_id": track.id})` resuelve.
 
-No quedan `NEEDS CLARIFICATION`; los faltantes están identificados como dependencias
-externas y no como trabajo autorizado para la 007.
+No quedan `NEEDS CLARIFICATION` ni dependencias externas para ejecutar las historias.

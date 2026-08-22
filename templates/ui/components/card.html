@@ -1,8 +1,18 @@
 {# card.html #}
 {# Contenedor con borde, fondo blanco, sombra #}
-{# Parámetros: content (required, will not be escaped), variant (default: default), class (optional) #}
+{# Parámetros: content (HTML opcional), title/metadata/action_* (modo estructurado), variant y class #}
 <div class="card {% if variant == 'raised' %}card--raised{% else %}card--default{% endif %} {{ class }}">
-  {{ content|safe }}
+  {% if title %}
+    <h3 class="card__title">{{ title }}</h3>
+    {% if metadata %}<p class="card__metadata">{{ metadata }}</p>{% endif %}
+    {% if action_href %}
+      <div class="card__action">
+        {% include "ui/components/button.html" with label=action_label href=action_href variant=action_variant|default:"primary" %}
+      </div>
+    {% endif %}
+  {% else %}
+    {{ content|safe }}
+  {% endif %}
 </div>
 
 <style>
@@ -15,5 +25,15 @@
   }
   .card--raised {
     box-shadow: 8px 8px 0 0 #000000;
+  }
+  .card__title {
+    margin: 0;
+  }
+  .card__metadata {
+    color: var(--ink-secondary);
+    margin: 0.75rem 0 0;
+  }
+  .card__action {
+    margin-top: 1.5rem;
   }
 </style>
