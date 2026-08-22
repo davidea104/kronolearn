@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio | KronoLearn{% endblock %}
+
+{% block content %}
+<section class="learner-home" aria-labelledby="home-title">
+  <header class="learner-home__header">
+    <p class="eyebrow">Sesión iniciada</p>
+    <h1 id="home-title">Hola, {{ request.user.display_name }}</h1>
+    <p class="learner-home__lead">Tu espacio de aprendizaje está listo.</p>
+  </header>
+
+  {% if not enrollments %}
+    {% url "catalog:track-list" as catalog_url %}
+    {% include "ui/components/empty_state.html" with headline="Aún no tienes tracks inscritos" message="Explora el catálogo para encontrar tu próxima ruta de aprendizaje." action_label="Explorar catálogo" action_href=catalog_url %}
+  {% endif %}
+</section>
+
+<style>
+  .learner-home {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .learner-home__header {
+    max-width: 42rem;
+  }
+
+  .learner-home__header .eyebrow {
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .learner-home__header h1 {
+    margin: 0 0 1rem;
+  }
+
+  .learner-home__lead {
+    color: var(--ink-secondary);
+    font-size: 18px;
+    margin: 0;
+  }
+</style>
+{% endblock %}

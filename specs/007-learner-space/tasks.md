@@ -69,11 +69,11 @@ estado vacío comprensible y llega a `catalog:track-list` desde su acción princ
 
 ### Tests for User Story 2
 
-- [ ] T005 [US2] Añadir primero pruebas fallidas para estado vacío, ausencia de tarjetas y enlace reversible al catálogo en tests/ui/test_learner_home.py
+- [x] T005 [US2] Añadir primero pruebas fallidas para estado vacío, ausencia de tarjetas y enlace reversible al catálogo en tests/ui/test_learner_home.py
 
 ### Implementation for User Story 2
 
-- [ ] T006 [US2] Implementar la rama vacía con ui/components/empty_state.html en templates/ui/learner_home.html y ejecutar las pruebas de US2 y US1
+- [x] T006 [US2] Implementar la rama vacía con ui/components/empty_state.html en templates/ui/learner_home.html y ejecutar las pruebas de US2 y US1
 
 **Checkpoint**: US2 funciona por separado y el listado de US1 continúa pasando.
 
