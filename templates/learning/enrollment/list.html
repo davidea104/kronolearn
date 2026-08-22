@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Inscripción | KronoLearn{% endblock %}
+{% block content %}
+<section aria-labelledby="enrollment-list-title">
+  <h1 id="enrollment-list-title">Explora los tracks</h1>
+  {% if cards %}
+  <div class="track-grid">
+    {% for card in cards %}
+      {% include "learning/enrollment/partials/track_card.html" with track=card.track module_count=card.module_count is_enrolled=card.is_enrolled %}
+    {% endfor %}
+  </div>
+  {% else %}
+    {% include "ui/components/empty_state.html" with icon="📚" headline="Sin tracks disponibles" message="Todavía no hay rutas de aprendizaje activas." %}
+  {% endif %}
+</section>
+
+<style>
+  .track-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+</style>
+{% endblock %}
