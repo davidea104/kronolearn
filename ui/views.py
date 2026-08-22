@@ -6,6 +6,10 @@ from django.shortcuts import render
 from accounts.security import active_account_required
 
 
+def index(request):
+    return render(request, "ui/index.html")
+
+
 @active_account_required
 def learner_home(request):
     return render(request, "ui/learner_home.html")
