@@ -9,15 +9,61 @@ on:
 permissions:
   contents: read
 
-env:
-  DJANGO_SETTINGS_MODULE: kronolearn.settings.development
-  SECRET_KEY: ci-only-secret-key-not-for-production
-  DEBUG: "True"
-  DATABASE_URL: postgresql://kronolearn:kronolearn@localhost:5432/kronolearn
-
 jobs:
-  validate:
+  sqlite-contracts:
     runs-on: ubuntu-latest
+    env:
+      DJANGO_SETTINGS_MODULE: kronolearn.settings.test
+      SECRET_KEY: ci-only-secret-key-not-for-production
+      DEBUG: "False"
+      DATABASE_URL: postgresql://unused:unused@127.0.0.1:5432/unused
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      - name: Install locked dependencies
+        run: python -m pip install --require-hashes -r requirements.txt
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Check formatting
+        run: ruff format --check .
+
+      - name: Check Django configuration
+        run: python manage.py check --settings=kronolearn.settings.test
+
+      - name: Check migration drift
+        run: python manage.py makemigrations --check --dry-run --settings=kronolearn.settings.test
+
+      - name: Run portable contract suite
+        run: >-
+          python manage.py test
+          tests.catalog.test_domain_contracts
+          tests.learning
+          tests.gamification
+          tests.analytics
+          tests.ui
+          tests.integration.test_domain_migrations
+          tests.integration.test_root_contracts
+          tests.integration.test_seed_demo
+          tests.integration.test_domain_privacy
+          --settings=kronolearn.settings.test -v 2
+
+  postgresql-contracts:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SETTINGS_MODULE: kronolearn.settings.development
+      SECRET_KEY: ci-only-secret-key-not-for-production
+      DEBUG: "True"
+      DATABASE_URL: postgresql://kronolearn:kronolearn@localhost:5432/kronolearn
     services:
       postgres:
         image: postgres:16
@@ -71,6 +117,24 @@ jobs:
           tests.catalog.test_content_services.ModuleVersionConcurrencyTests
           tests.catalog.test_ordering_services.TrackOrderingConcurrencyTests
           tests.catalog.test_ordering_services.ModuleOrderingConcurrencyTests
+          -v 2
+
+      - name: Run authoritative domain contract matrix
+        run: >-
+          python manage.py test
+          tests.catalog.test_domain_contracts
+          tests.learning
+          tests.gamification
+          tests.analytics
+          tests.ui
+          tests.integration
+          -v 2
+
+      - name: Verify demo idempotency and privacy
+        run: >-
+          python manage.py test
+          tests.integration.test_seed_demo
+          tests.integration.test_domain_privacy
           -v 2
 
       - name: Run Django tests
