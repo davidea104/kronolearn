@@ -45,12 +45,12 @@ No foundational implementation is required. `ui`, `base.html`, `button.html`, ac
 
 ### Tests for User Story 1
 
-- [ ] T001 [US1] Create failing `test_root_resolves_to_ui_index`, `test_visitor_sees_public_landing_and_account_actions`, and `test_visitor_landing_is_static_and_excludes_out_of_scope_sections` cases in `tests/ui/test_public_landing.py`, covering `ui:index`, status `200`, `ui/index.html`, zero database queries for the anonymous request, purpose copy, one `<h1>`, absence of blog/prices/testimonials/contact/language content, and registration/login destinations scoped to the landing `<main>` so links in `ui/templates/base.html` cannot satisfy the assertions; confirm “Continuar aprendiendo” is absent, verify the shared button output, then run `manage.py test tests.ui.test_public_landing --settings=kronolearn.settings.test -v 2` and confirm failure before implementation
+- [X] T001 [US1] Create failing `test_root_resolves_to_ui_index`, `test_visitor_sees_public_landing_and_account_actions`, and `test_visitor_landing_is_static_and_excludes_out_of_scope_sections` cases in `tests/ui/test_public_landing.py`, covering `ui:index`, status `200`, `ui/index.html`, zero database queries for the anonymous request, purpose copy, one `<h1>`, absence of blog/prices/testimonials/contact/language content, and registration/login destinations scoped to the landing `<main>` so links in `ui/templates/base.html` cannot satisfy the assertions; confirm “Continuar aprendiendo” is absent, verify the shared button output, then run `manage.py test tests.ui.test_public_landing --settings=kronolearn.settings.test -v 2` and confirm failure before implementation
 
 ### Implementation for User Story 1
 
-- [ ] T002 [US1] Add only `index(request)` rendering `ui/index.html` in `ui/views.py` and `path("", views.index, name="index")` before the existing routes in `ui/urls.py`; rerun the route test in `tests/ui/test_public_landing.py` and confirm it passes while the template test still fails
-- [ ] T003 [US1] Create the static visitor experience in `templates/ui/index.html` by extending `base.html`, adding concise KronoLearn purpose copy and semantic structure, and including `ui/components/button.html` for `accounts:register` and `accounts:login` without models, forms, JavaScript, duplicated component markup or out-of-scope sections; rerun `tests.ui.test_public_landing` and confirm all US1 tests pass
+- [X] T002 [US1] Add only `index(request)` rendering `ui/index.html` in `ui/views.py` and `path("", views.index, name="index")` before the existing routes in `ui/urls.py`; rerun the route test in `tests/ui/test_public_landing.py` and confirm it passes while the template test still fails
+- [X] T003 [US1] Create the static visitor experience in `templates/ui/index.html` by extending `base.html`, adding concise KronoLearn purpose copy and semantic structure, and including `ui/components/button.html` for `accounts:register` and `accounts:login` without models, forms, JavaScript, duplicated component markup or out-of-scope sections; rerun `tests.ui.test_public_landing` and confirm all US1 tests pass
 
 **Checkpoint**: The visitor-facing landing page is independently functional and is the MVP.
 
@@ -64,11 +64,11 @@ No foundational implementation is required. `ui`, `base.html`, `button.html`, ac
 
 ### Tests for User Story 2
 
-- [ ] T004 [US2] Add a failing `test_authenticated_account_sees_only_continue_action` case using an active account and exact named destinations in `tests/ui/test_public_landing.py`; run that test alone and confirm it fails before changing the template
+- [X] T004 [US2] Add a failing `test_authenticated_account_sees_only_continue_action` case using an active account and exact named destinations in `tests/ui/test_public_landing.py`; run that test alone and confirm it fails before changing the template
 
 ### Implementation for User Story 2
 
-- [ ] T005 [US2] Add the `request.user.is_authenticated` action branch in `templates/ui/index.html`, rendering only the shared `button.html` component linked to `ui:learner-home` for authenticated accounts and retaining only registration/login actions for visitors; rerun `tests.ui.test_public_landing` and confirm all US1 and US2 tests pass
+- [X] T005 [US2] Add the `request.user.is_authenticated` action branch in `templates/ui/index.html`, rendering only the shared `button.html` component linked to `ui:learner-home` for authenticated accounts and retaining only registration/login actions for visitors; rerun `tests.ui.test_public_landing` and confirm all US1 and US2 tests pass
 
 **Checkpoint**: Visitor and authenticated landing states are both independently testable and match the clarified action matrix.
 
@@ -82,7 +82,7 @@ No foundational implementation is required. `ui`, `base.html`, `button.html`, ac
 
 ### Regression Tests for User Story 3
 
-- [ ] T006 [P] [US3] Run `tests.ui.test_learner_home`, `tests.accounts.test_sessions.LogoutAndPrivateSessionTests.test_deactivated_account_loses_private_access`, and `tests.accounts.test_sessions.LoginViewTests.test_valid_login_creates_session_and_redirects_with_303` as specified in `specs/006-public-landing/quickstart.md`, confirming anonymous and inactive accounts remain denied, active accounts retain access, and successful login still returns `303` to `/learn/` without modifying `tests/ui/test_learner_home.py` or `tests/accounts/test_sessions.py`
+- [X] T006 [P] [US3] Run `tests.ui.test_learner_home`, `tests.accounts.test_sessions.LogoutAndPrivateSessionTests.test_deactivated_account_loses_private_access`, and `tests.accounts.test_sessions.LoginViewTests.test_valid_login_creates_session_and_redirects_with_303` as specified in `specs/006-public-landing/quickstart.md`, confirming anonymous and inactive accounts remain denied, active accounts retain access, and successful login still returns `303` to `/learn/` without modifying `tests/ui/test_learner_home.py` or `tests/accounts/test_sessions.py`
 
 **Checkpoint**: All three user stories are complete and existing authorization behavior remains unchanged.
 
@@ -92,7 +92,7 @@ No foundational implementation is required. `ui`, `base.html`, `button.html`, ac
 
 **Purpose**: Document the public change and verify the complete feature against quality, accessibility and scope gates.
 
-- [ ] T007 [P] Add one concise bullet under `Unreleased` → `Added` in `CHANGELOG.md` stating that `/` now serves the public KronoLearn landing page with account and learning destinations; do not add migration guidance because this feature has no schema or operator migration
+- [X] T007 [P] Add one concise bullet under `Unreleased` → `Added` in `CHANGELOG.md` stating that `/` now serves the public KronoLearn landing page with account and learning destinations; do not add migration guidance because this feature has no schema or operator migration
 - [ ] T008 Execute every automated, browser, product-acceptance, and scope validation in `specs/006-public-landing/quickstart.md`, including the focused tests, anonymous/active/inactive access regressions, login redirect, full `tests.ui` suite, Ruff, Django checks, migration-drift check, keyboard focus, 200% zoom, mobile layout, and the 30-second SC-002 review by the product owner; record acceptance in the feature pull request, run the combined `git diff HEAD --name-only` and `git ls-files --others --exclude-standard` check, and confirm its non-spec output contains only the five implementation paths declared in `specs/006-public-landing/plan.md` while excluding `kronolearn/urls.py` and every other closed path
 
 ---
