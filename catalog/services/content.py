@@ -7,6 +7,7 @@ from types import MappingProxyType
 
 from django.core.signing import salted_hmac
 from django.db import IntegrityError, transaction
+from django.db.models import F
 from django.utils import timezone
 
 from accounts.models import Account
@@ -14,6 +15,8 @@ from accounts.security import CONTENT_ADMIN_ROLE
 from catalog.models import (
     CatalogChangeLog,
     CatalogState,
+    ContentItem,
+    ContentVersion,
     Module,
     ModuleVersion,
     Track,
@@ -55,6 +58,79 @@ class CatalogModuleTarget:
     entity: Module | None
     modules: tuple[Module, ...]
     unresolved_reference: str | None
+
+
+def publish_content_item(
+    content_item: ContentItem,
+    actor: Account,
+    payload: Mapping[str, object],
+) -> ContentVersion:
+    """Publish one immutable content snapshot in a future workflow.
+
+    Preconditions: the item and actor are persisted, the payload describes a valid
+    publishable snapshot, and the item's revision can be locked and validated.
+    Result: a new immutable current ContentVersion; older snapshots stay unchanged.
+    Ordering: version numbers increase under lock and item position is unchanged.
+    Current effects: none; this STUB performs no reads, writes, events, or logging.
+    Expected errors: currently NotImplementedError; the future atomic workflow rejects
+    invalid payloads, stale revisions, and integrity conflicts without partial writes.
+    Future authorization: reload and authorize the persisted actor as content_admin.
+    Idempotency: no caller key exists; locked revision validation must prevent a
+    duplicate publication for the same accepted revision.
+    """
+    raise NotImplementedError
+
+
+def create_content_draft(
+    module: Module,
+    actor: Account,
+    payload: Mapping[str, object],
+) -> ContentItem:
+    """Create a content draft in a future locked authoring workflow.
+
+    Preconditions: the module and actor are persisted and the payload is valid draft
+    input for the module's current revision.
+    Result: a draft ContentItem appended to the module's content sequence.
+    Ordering: the future workflow allocates the next consecutive position under lock.
+    Current effects: none; this STUB performs no reads, writes, events, or logging.
+    Expected errors: currently NotImplementedError; the future atomic workflow rejects
+    invalid payloads, stale revisions, and integrity conflicts without partial writes.
+    Future authorization: reload and authorize the persisted actor as content_admin.
+    Idempotency: no caller key exists; locked revision validation must prevent a
+    duplicate draft for the same accepted request.
+    """
+    raise NotImplementedError
+
+
+def get_published_version(content_item: ContentItem) -> ContentVersion | None:
+    """Return the exact current published snapshot without version fallback."""
+    if (
+        content_item.status != ContentItem.Status.PUBLISHED
+        or content_item.published_version < 1
+    ):
+        return None
+    return ContentVersion.objects.filter(
+        content_item=content_item,
+        version_number=content_item.published_version,
+    ).first()
+
+
+def list_published_versions(track: Track) -> list[ContentVersion]:
+    """List current snapshots for active modules in deterministic content order."""
+    return list(
+        ContentVersion.objects.filter(
+            content_item__module__track=track,
+            content_item__module__status=Module.Status.ACTIVE,
+            content_item__status=ContentItem.Status.PUBLISHED,
+            version_number=F("content_item__published_version"),
+        )
+        .select_related("content_item", "content_item__module")
+        .order_by(
+            "content_item__module__position",
+            "content_item__position",
+            "id",
+        )
+    )
 
 
 def resolve_catalog_target(actor, model, requested_reference):

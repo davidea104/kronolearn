@@ -245,6 +245,171 @@ class ModuleVersion(ImmutableModel):
         return super().save(*args, **kwargs)
 
 
+class ContentItem(models.Model):
+    """Mutable ordered content unit owned by one module."""
+
+    class Status(models.TextChoices):
+        DRAFT = "DRAFT", "Draft"
+        PUBLISHED = "PUBLISHED", "Published"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    module = models.ForeignKey(
+        Module, on_delete=models.PROTECT, related_name="content_items"
+    )
+    position = models.PositiveIntegerField()
+    status = models.CharField(
+        max_length=9,
+        choices=Status.choices,
+        default=Status.DRAFT,
+    )
+    revision = models.PositiveBigIntegerField(default=1)
+    published_version = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("module_id", "position", "id")
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                fields=("module", "position"),
+                name="catalog_content_module_position_unique",
+            ),
+            models.CheckConstraint(
+                condition=Q(position__gte=1),
+                name="catalog_content_position_positive",
+            ),
+            models.CheckConstraint(
+                condition=Q(revision__gte=1),
+                name="catalog_content_revision_positive",
+            ),
+            models.CheckConstraint(
+                condition=Q(status="DRAFT") | Q(published_version__gte=1),
+                name="catalog_content_published_has_version",
+            ),
+        ]
+        indexes: ClassVar[list[models.Index]] = [
+            models.Index(
+                fields=("module", "status", "position"),
+                name="catalog_content_state_idx",
+            ),
+        ]
+
+
+class ContentVersion(ImmutableModel):
+    """Append-only snapshot of learner-facing content."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    content_item = models.ForeignKey(
+        ContentItem, on_delete=models.PROTECT, related_name="versions"
+    )
+    version_number = models.PositiveIntegerField()
+    title = models.CharField(max_length=160)
+    learning_objective = models.CharField(max_length=1000)
+    lesson_text = models.TextField()
+    case_prompt = models.TextField()
+    source = models.CharField(max_length=500)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="content_versions_authored",
+    )
+    reviewed_on = models.DateField()
+    published_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        default_permissions = ("view",)
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                fields=("content_item", "version_number"),
+                name="catalog_content_version_unique",
+            ),
+            models.CheckConstraint(
+                condition=Q(version_number__gte=1),
+                name="catalog_content_version_positive",
+            ),
+            models.CheckConstraint(
+                condition=~Q(source=""),
+                name="catalog_content_source_nonempty",
+            ),
+        ]
+        indexes: ClassVar[list[models.Index]] = [
+            models.Index(
+                fields=("content_item", "-version_number"),
+                name="catalog_content_version_idx",
+            ),
+        ]
+
+    @property
+    def is_current(self) -> bool:
+        return self.version_number == self.content_item.published_version
+
+    def save(self, *args, **kwargs):
+        self.source = self.source.strip()
+        return super().save(*args, **kwargs)
+
+
+class Choice(ImmutableModel):
+    """Append-only answer option for one content snapshot."""
+
+    class Rating(models.TextChoices):
+        OPTIMAL = "OPTIMAL", "Optimal"
+        PARTIAL = "PARTIAL", "Partially adequate"
+        INCORRECT = "INCORRECT", "Incorrect"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    content_version = models.ForeignKey(
+        ContentVersion, on_delete=models.PROTECT, related_name="choices"
+    )
+    text = models.CharField(max_length=1000)
+    position = models.PositiveSmallIntegerField()
+    rating = models.CharField(max_length=9, choices=Rating.choices)
+    consequence = models.TextField()
+    explanation = models.TextField()
+
+    class Meta:
+        default_permissions = ("view",)
+        ordering = ("content_version_id", "position", "id")
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(
+                fields=("content_version", "position"),
+                name="catalog_choice_version_position_unique",
+            ),
+            models.CheckConstraint(
+                condition=Q(position__gte=1, position__lte=4),
+                name="catalog_choice_position_bounded",
+            ),
+        ]
+
+
+def validate_verification_checklist(value):
+    if not isinstance(value, list) or not value:
+        raise ValidationError("Verification checklist must be a non-empty list.")
+    if any(not isinstance(item, str) or not item.strip() for item in value):
+        raise ValidationError(
+            "Verification checklist entries must be non-empty strings."
+        )
+
+
+class LabExercise(ImmutableModel):
+    """Optional append-only exercise for one content snapshot."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    content_version = models.OneToOneField(
+        ContentVersion,
+        on_delete=models.PROTECT,
+        related_name="lab_exercise",
+    )
+    objective = models.CharField(max_length=1000)
+    initial_prompt = models.TextField()
+    expected_artifact = models.TextField()
+    verification_checklist = models.JSONField(
+        validators=[validate_verification_checklist]
+    )
+
+    class Meta:
+        default_permissions = ("view",)
+
+
 class CatalogChangeLog(ImmutableModel):
     """Append-only outcome of an authenticated catalog command."""
 
