@@ -9,6 +9,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("", include("catalog.urls")),
+    path("", include("learning.urls")),
+    path("", include("gamification.urls")),
+    path("", include("analytics.urls")),
     path("", include("ui.urls")),
     path("healthz", healthz, name="healthz"),
 ]

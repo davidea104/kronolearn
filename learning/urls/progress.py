@@ -1,0 +1,3 @@
+"""Reserved progress routes."""
+
+urlpatterns = []
