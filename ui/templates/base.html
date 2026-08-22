@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="es">
 <head>
@@ -7,6 +8,18 @@
   <title>{% block title %}KronoLearn{% endblock %}</title>
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js" integrity="sha384-ZBXiYtYQ6hJ2Y0ZNoYuI+Nq5MqWBr+chMrS/RkXpNzQCApHEhOt2aY8EJgqwHLkJ" crossorigin="anonymous" defer></script>
+  <script>
+    (function () {
+      try {
+        if (window.localStorage.getItem('kronolearn:theme') === 'dark') {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      } catch (error) {
+        /* localStorage no disponible: se mantiene el modo claro por defecto */
+      }
+    })();
+  </script>
+  <script src="{% static 'js/theme-toggle.js' %}" defer></script>
   <style>
     :root {
       color-scheme: light;
@@ -22,6 +35,19 @@
       --border-radius-pill: 100px;
       --shadow-hard: 6px 6px 0 0 #000000;
       --shadow-light: 2px 2px 0 0 #000000;
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --ink: #F2F2F2;
+      --ink-secondary: #A9B0B9;
+      --paper: #121212;
+      --border: #F2F2F2;
+      --divider: #2A2A2A;
+      --accent-green: #8FD9A8;
+      --accent-lavender: #C9BBFF;
+      --accent-red: #E28C8C;
+      --shadow-hard: 6px 6px 0 0 #F2F2F2;
+      --shadow-light: 2px 2px 0 0 #F2F2F2;
     }
     * { box-sizing: border-box; }
     html {
@@ -236,6 +262,53 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
+    .theme-toggle {
+      position: relative;
+      min-height: 44px;
+      min-width: 44px;
+      padding: 0.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      background: transparent;
+      color: var(--ink);
+      box-shadow: none;
+    }
+    .theme-toggle:hover, .theme-toggle:focus-visible {
+      box-shadow: none;
+      background: var(--divider);
+    }
+    .theme-toggle:active {
+      box-shadow: none;
+    }
+    .theme-toggle__icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+    .theme-toggle__tooltip {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 0.5rem;
+      display: inline-block;
+      background: var(--border);
+      color: var(--paper);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--border-radius-pill);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.1s ease-out;
+      pointer-events: none;
+    }
+    .theme-toggle:hover .theme-toggle__tooltip,
+    .theme-toggle:focus-visible .theme-toggle__tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
     .step-number {
       display: flex;
       align-items: flex-start;
@@ -288,6 +361,7 @@
             <a href="{% url 'accounts:register' %}">Crear cuenta</a>
           {% endif %}
         {% endblock %}
+        {% include "ui/components/theme_toggle.html" %}
       </nav>
     </div>
   </header>

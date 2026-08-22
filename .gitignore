@@ -238,3 +238,6 @@ __marimo__/
 .specify/memory/*
 !.specify/memory/constitution.md
 !.specify/feature.json
+
+# Claude
+.claude

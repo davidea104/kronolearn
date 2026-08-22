@@ -23,6 +23,27 @@ Neo-brutalismo suave, extraído de diversas fuentes. Este documento es la fuente
 | **Sombra** | 6px 6px 0 0 negro | Hard shadow, offset (presión visible) |
 | **Sombra leve** | 2px 2px 0 0 negro | Seleccionado, hover (botón presionado) |
 
+### Tokens — Modo oscuro
+
+Activados con `data-theme="dark"` en `<html>`, sobreescriben los tokens claros manteniendo la misma identidad
+neo-brutalista (bordes duros y sombra dura desplazada, ahora en el color claro en vez de negro).
+
+| Token | Valor | Equivalente en modo claro |
+|-------|-------|-----|
+| **Texto principal** | #F2F2F2 | #191919 |
+| **Texto secundario** | #A9B0B9 | #69727D |
+| **Fondo** | #121212 | #FFFFFF |
+| **Borde** | #F2F2F2, 2px | #000000, 2px |
+| **Acento verde** | #8FD9A8 | #6EBE87 |
+| **Acento lavanda** | #C9BBFF | #B39AFF |
+| **Divisor** | #2A2A2A, 1px | #EEEEEE, 1px |
+| **Sombra** | 6px 6px 0 0 #F2F2F2 | 6px 6px 0 0 negro |
+| **Sombra leve** | 2px 2px 0 0 #F2F2F2 | 2px 2px 0 0 negro |
+
+Los acentos se aclaran respecto a sus equivalentes de modo claro para conservar, sobre el nuevo fondo oscuro, un
+contraste igual o superior al que ya tienen cuando se usan como color de texto (por ejemplo, el estado "optimal"
+de `choice_option.html`). El radio de bordes (10px / 100px en píldoras) no cambia entre modos.
+
 ## 2. Tipografía Base
 
 ```css
@@ -253,6 +274,38 @@ line-height: 1.5;
 
 ---
 
+### theme_toggle.html
+
+**Uso:** Botón para alternar entre modo claro y modo oscuro. Único punto de inclusión: el `<header>` de
+`base.html`; se hereda automáticamente en toda plantilla que extienda `base.html`.
+
+**Parámetros:** ninguno. Su estado lo determina el atributo `data-theme` ya aplicado en `<html>` (leído y
+actualizado por `ui/static/js/theme-toggle.js`), no una variable de contexto de Django.
+
+**Markup interno:**
+```html
+<button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Cambiar a modo oscuro">
+  <span class="theme-toggle__icon" aria-hidden="true" data-theme-toggle-icon>🌙</span>
+  <span class="theme-toggle__tooltip" aria-hidden="true" data-theme-toggle-label>Modo oscuro</span>
+</button>
+```
+Es un ícono sin caja (sin borde ni sombra dura, a diferencia de `.button`/`.button--outline`): el ícono (🌙/☀️) es
+la única señal visible en reposo, nunca depende solo del color. El nombre accesible permanente vive en `aria-label`
+(actualizado junto con `aria-pressed`); el `<span class="theme-toggle__tooltip">` es una confirmación textual
+revelada solo por CSS puro (`:hover`/`:focus-visible`, sin JavaScript) y va `aria-hidden="true"` para no duplicar
+el anuncio del lector de pantalla. Sin lógica de negocio ni acceso a datos.
+
+**Comportamiento:** el clic alterna `data-theme` en `<html>` y persiste la elección en `localStorage`
+(`kronolearn:theme`) para este navegador; el cambio se propaga en tiempo real a otras pestañas abiertas del mismo
+navegador mediante el evento `storage`. El administrador de Django no incluye este componente.
+
+**Ejemplo:**
+```django
+{% include "ui/components/theme_toggle.html" %}
+```
+
+---
+
 ## 5. Reglas de Layout (Markup sin componentes)
 
 - **Spacing:** Usa múltiplos de 4px o 8px (px-4, py-8, gap-4, etc. en valores real, no clases Tailwind).
@@ -343,3 +396,5 @@ Antes de marcar un trabajo como completo:
 | Versión | Fecha | Cambios |
 |---------|-------|---------|
 | 1.0 | 2026-08-21 | Creación: sistema visual neo-brutalista con 9 componentes |
+| 1.1 | 2026-08-22 | Añade modo oscuro (tokens y activación por `data-theme`) y el componente `theme_toggle.html` |
+| 1.2 | 2026-08-22 | `theme_toggle.html` pasa a ser solo ícono, sin borde ni sombra, con `aria-label` y tooltip revelado al enfocar/pasar el mouse |
