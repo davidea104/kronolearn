@@ -237,3 +237,6 @@ __marimo__/
 !.specify/memory/
 .specify/memory/*
 !.specify/memory/constitution.md
+
+# Claude Code
+.claude/
