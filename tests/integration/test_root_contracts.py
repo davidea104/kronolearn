@@ -178,10 +178,8 @@ class RootContractTests(SimpleTestCase):
                 1,
             )
 
-    def test_reserved_route_modules_have_no_workflow_routes(self):
+    def test_unimplemented_route_modules_have_no_workflow_routes(self):
         modules = (
-            "learning.urls.enrollment",
-            "learning.urls.session",
             "learning.urls.attempts",
             "learning.urls.progress",
             "gamification.urls",
@@ -190,6 +188,13 @@ class RootContractTests(SimpleTestCase):
         for module_name in modules:
             module = importlib.import_module(module_name)
             self.assertEqual(module.urlpatterns, [], module_name)
+
+    def test_daily_session_exposes_only_the_current_placeholder(self):
+        module = importlib.import_module("learning.urls.session")
+
+        self.assertEqual(len(module.urlpatterns), 1)
+        self.assertEqual(module.urlpatterns[0].name, "session-current")
+        self.assertEqual(str(module.urlpatterns[0].pattern), "<uuid:track_id>/")
 
     def test_package_initializers_remain_empty(self):
         root = Path(__file__).resolve().parents[2]

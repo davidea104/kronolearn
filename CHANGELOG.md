@@ -19,6 +19,7 @@ Todos los cambios publicos relevantes de KronoLearn se documentan en este archiv
 - Comando idempotente `seed_demo` con dos tracks publicados, cuentas privadas `.invalid`, datos de ejemplo válidos y barrera explícita fuera de desarrollo.
 - Jobs CI separados para contratos portables en SQLite y evidencia autoritativa de migraciones, exclusión, concurrencia y privacidad en PostgreSQL 16.
 - Portada pública en `/` con accesos a registro, inicio de sesión y espacio de aprendizaje.
+- Espacio privado del aprendiz con tracks inscritos, conteo de modulos, estado vacio y acceso temporal protegido a la sesion diaria.
 
 ### Changed
 

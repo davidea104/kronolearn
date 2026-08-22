@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Sesión diaria | KronoLearn{% endblock %}
+
+{% block content %}
+<section class="session-placeholder panel" aria-labelledby="session-title">
+  <p class="eyebrow">Sesión diaria</p>
+  <h1 id="session-title">Tu sesión estará disponible pronto</h1>
+  <p>Estamos preparando este espacio de aprendizaje.</p>
+  {% url "ui:learner-home" as learner_home_url %}
+  {% include "ui/components/button.html" with label="Volver a mis tracks" href=learner_home_url variant="outline" %}
+</section>
+
+<style>
+  .session-placeholder {
+    max-width: 42rem;
+  }
+
+  .session-placeholder h1 {
+    margin-bottom: 1rem;
+  }
+
+  .session-placeholder p:not(.eyebrow) {
+    color: var(--ink-secondary);
+    margin-bottom: 1.5rem;
+  }
+</style>
+{% endblock %}

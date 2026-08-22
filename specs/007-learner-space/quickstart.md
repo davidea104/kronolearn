@@ -3,14 +3,13 @@
 ## Prerequisitos
 
 1. Activar el entorno virtual del proyecto e instalar `requirements.txt`.
-2. Usar la rama `007-learner-space` con los prerequisitos de
-   [research.md](research.md#prerequisitos-de-implementación) ya integrados.
+2. Usar la rama `007-learner-space`.
 3. Configurar las variables requeridas por `kronolearn.settings.test`.
 
-Comprobar primero los contratos externos:
+Comprobar primero los contratos fundacionales:
 
 ```powershell
-python manage.py test tests.learning.test_enrollment_contracts --settings=kronolearn.settings.test -v 2
+python manage.py test tests.learning.test_enrollment_contracts tests.learning.session.test_current_placeholder --settings=kronolearn.settings.test -v 2
 ```
 
 Resultado esperado: el servicio aísla por cuenta, rechaza una cuenta que ya no está
@@ -22,8 +21,8 @@ activa, carga el track y publica `module_count` sin N+1. La ruta
 ```powershell
 python manage.py test tests.ui.test_learner_home --settings=kronolearn.settings.test -v 2
 python manage.py check --settings=kronolearn.settings.test
-ruff check ui/views.py tests/ui
-ruff format --check ui/views.py tests/ui
+ruff check learning/services/enrollment.py learning/urls/session.py learning/views/session ui/views.py tests/learning tests/ui
+ruff format --check learning/services/enrollment.py learning/urls/session.py learning/views/session ui/views.py tests/learning tests/ui
 ```
 
 Resultados esperados:
@@ -41,7 +40,7 @@ Resultados esperados:
 ## Suite de integración
 
 ```powershell
-python manage.py test tests.ui tests.accounts.test_sessions --settings=kronolearn.settings.test -v 2
+python manage.py test tests.ui tests.accounts.test_sessions tests.learning.test_enrollment_contracts tests.learning.session.test_current_placeholder --settings=kronolearn.settings.test -v 2
 ```
 
 La matriz de CI vuelve a ejecutar `tests.ui` con PostgreSQL 16. Esta feature no
@@ -59,7 +58,17 @@ Para la implementación de la 007 solo deben aparecer:
 ui/views.py
 ui/templates/ui/learner_home.html
 templates/ui/learner_home.html
+templates/ui/components/card.html
 tests/ui/
+learning/services/enrollment.py
+learning/urls/session.py
+learning/views/session/
+templates/learning/session/current.html
+tests/learning/test_enrollment_contracts.py
+tests/learning/session/test_current_placeholder.py
+tests/integration/test_root_contracts.py
+docs/contracts/domain-contracts.md
+CHANGELOG.md
 specs/007-learner-space/
 ```
 

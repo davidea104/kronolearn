@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}Inicio | KronoLearn{% endblock %}
 
@@ -10,7 +11,18 @@
     <p class="learner-home__lead">Tu espacio de aprendizaje está listo.</p>
   </header>
 
-  {% if not enrollments %}
+  {% if enrollments %}
+    <section aria-labelledby="tracks-title">
+      <h2 id="tracks-title">Mis tracks</h2>
+      <div class="learner-home__tracks">
+        {% for enrollment in enrollments %}
+          {% url "learning:session-current" track_id=enrollment.track.id as session_url %}
+          {% blocktranslate count module_count=enrollment.module_count asvar module_count_label %}{{ module_count }} módulo{% plural %}{{ module_count }} módulos{% endblocktranslate %}
+          {% include "ui/components/card.html" with title=enrollment.track.title metadata=module_count_label action_label="Iniciar sesión diaria" action_href=session_url %}
+        {% endfor %}
+      </div>
+    </section>
+  {% else %}
     {% url "catalog:track-list" as catalog_url %}
     {% include "ui/components/empty_state.html" with headline="Aún no tienes tracks inscritos" message="Explora el catálogo para encontrar tu próxima ruta de aprendizaje." action_label="Explorar catálogo" action_href=catalog_url %}
   {% endif %}
@@ -39,6 +51,12 @@
     color: var(--ink-secondary);
     font-size: 18px;
     margin: 0;
+  }
+
+  .learner-home__tracks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1.5rem;
   }
 </style>
 {% endblock %}
