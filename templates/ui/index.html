@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}KronoLearn | Aprende tomando decisiones{% endblock %}
+
+{% block main %}
+  <section class="panel" aria-labelledby="landing-title">
+    {% include "ui/components/eyebrow.html" with text="APRENDER HACIENDO" %}
+    <h1 id="landing-title">Decide, comprende y mejora.</h1>
+    <p>
+      KronoLearn convierte situaciones reales en aprendizaje breve: tomas decisiones,
+      entiendes sus consecuencias y fortaleces tu criterio paso a paso.
+    </p>
+    <p class="muted">Crea una cuenta para comenzar o inicia sesión para retomar tu recorrido.</p>
+
+    <div aria-label="Opciones de acceso">
+      {% if request.user.is_authenticated %}
+        {% url "ui:learner-home" as learner_home_url %}
+        {% include "ui/components/button.html" with label="Continuar aprendiendo" href=learner_home_url %}
+      {% else %}
+        {% url "accounts:register" as register_url %}
+        {% url "accounts:login" as login_url %}
+        {% include "ui/components/button.html" with label="Crear cuenta" href=register_url %}
+        {% include "ui/components/button.html" with label="Iniciar sesión" href=login_url variant="outline" %}
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

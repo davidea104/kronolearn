@@ -1,6 +1,7 @@
 """Contract tests for shared catalog content entities."""
 
 import inspect
+from dataclasses import FrozenInstanceError, fields
 
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
@@ -16,6 +17,7 @@ from catalog.models import (
     Module,
     Track,
 )
+from catalog.services import content as content_service
 from catalog.services.content import (
     create_content_draft,
     get_published_version,
@@ -147,17 +149,35 @@ class CatalogDomainContractTests(TestCase):
             tuple(inspect.signature(list_published_versions).parameters),
             ("track",),
         )
-
-    def test_content_mutation_stubs_are_side_effect_free(self):
-        counts = (ContentItem.objects.count(), ContentVersion.objects.count())
-        with self.assertRaises(NotImplementedError):
-            create_content_draft(self.module, self.author, {})
-        item = ContentItem(module=self.module, position=1)
-        with self.assertRaises(NotImplementedError):
-            publish_content_item(item, self.author, {})
         self.assertEqual(
-            (ContentItem.objects.count(), ContentVersion.objects.count()), counts
+            tuple(inspect.signature(content_service.load_learning_content).parameters),
+            ("actor_ref", "definitions"),
         )
+
+    def test_content_load_contract_types_are_stable_and_immutable(self):
+        self.assertTrue(issubclass(content_service.ContentRevisionConflict, Exception))
+        self.assertTrue(issubclass(content_service.ContentLoadConflict, Exception))
+        self.assertEqual(
+            tuple(field.name for field in fields(content_service.ContentLoadOutcome)),
+            (
+                "changed",
+                "track_count",
+                "module_count",
+                "content_item_count",
+                "items_created",
+                "versions_created",
+            ),
+        )
+        outcome = content_service.ContentLoadOutcome(
+            changed=False,
+            track_count=2,
+            module_count=2,
+            content_item_count=10,
+            items_created=0,
+            versions_created=0,
+        )
+        with self.assertRaises(FrozenInstanceError):
+            outcome.changed = True
 
     def test_published_version_queries_are_exact_and_deterministic(self):
         other_module = Module.objects.create(

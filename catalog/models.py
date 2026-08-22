@@ -298,6 +298,9 @@ class ContentItem(models.Model):
 class ContentVersion(ImmutableModel):
     """Append-only snapshot of learner-facing content."""
 
+    class EditorialStatus(models.TextChoices):
+        PUBLISHED = "PUBLISHED", "Published"
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content_item = models.ForeignKey(
         ContentItem, on_delete=models.PROTECT, related_name="versions"
@@ -314,6 +317,11 @@ class ContentVersion(ImmutableModel):
         related_name="content_versions_authored",
     )
     reviewed_on = models.DateField()
+    editorial_status = models.CharField(
+        max_length=9,
+        choices=EditorialStatus.choices,
+        default=EditorialStatus.PUBLISHED,
+    )
     published_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -330,6 +338,10 @@ class ContentVersion(ImmutableModel):
             models.CheckConstraint(
                 condition=~Q(source=""),
                 name="catalog_content_source_nonempty",
+            ),
+            models.CheckConstraint(
+                condition=Q(editorial_status="PUBLISHED"),
+                name="catalog_content_version_published",
             ),
         ]
         indexes: ClassVar[list[models.Index]] = [

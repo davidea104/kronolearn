@@ -151,6 +151,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.Account"
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "ui:learner-home"
+CONTENT_AUTHOR_ACCOUNT_ID = os.environ.get("CONTENT_AUTHOR_ACCOUNT_ID") or None
 LOGIN_TRUSTED_PROXY_COUNT = environment_nonnegative_int(
     "LOGIN_TRUSTED_PROXY_COUNT",
     default=0,
