@@ -9,6 +9,8 @@ from accounts.models import Account
 from catalog.models import (
     CatalogChangeLog,
     CatalogState,
+    ContentItem,
+    ContentVersion,
     Module,
     ModuleVersion,
     Track,
@@ -28,6 +30,27 @@ class CatalogModelTests(TestCase):
             description="Descripcion",
             audience="Equipo",
             position=1,
+        )
+
+    def create_content_version(self):
+        module = Module.objects.create(
+            track=self.track,
+            title="Modulo de contenido",
+            objective="Comprender",
+            position=1,
+        )
+        content_item = ContentItem.objects.create(module=module, position=1)
+        return ContentVersion.objects.create(
+            content_item=content_item,
+            version_number=1,
+            title="Unidad",
+            learning_objective="Comprender la unidad",
+            lesson_text="Microleccion completa",
+            case_prompt="Caso ficticio",
+            source="DOC-CONTENT-001",
+            author=self.author,
+            reviewed_on=timezone.localdate(),
+            editorial_status=ContentVersion.EditorialStatus.PUBLISHED,
         )
 
     def test_track_normalizes_identity_and_uses_safe_defaults(self):
@@ -111,6 +134,23 @@ class CatalogModelTests(TestCase):
             track_version.save()
         with self.assertRaises(ValidationError):
             track_version.delete()
+
+    def test_content_version_has_only_published_editorial_status(self):
+        content_version = self.create_content_version()
+
+        self.assertEqual(
+            ContentVersion.EditorialStatus.values,
+            [ContentVersion.EditorialStatus.PUBLISHED],
+        )
+        self.assertEqual(
+            content_version.editorial_status,
+            ContentVersion.EditorialStatus.PUBLISHED,
+        )
+        content_version.editorial_status = "DRAFT"
+        with self.assertRaises(ValidationError):
+            content_version.save()
+        with self.assertRaises(ValidationError):
+            content_version.delete()
 
     def test_audit_reference_fields_are_mutually_exclusive(self):
         with self.assertRaises(IntegrityError), transaction.atomic():

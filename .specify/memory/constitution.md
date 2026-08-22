@@ -1,20 +1,11 @@
 <!--
 Sync Impact Report
 
-- Version change: 1.2.0 -> 1.3.0
+- Version change: 1.3.0 -> 1.4.0
 - Modified principles:
-  - 1 "Desarrollo guiado por especificaciones" (global rules are referenced, not duplicated)
-  - 2 "Diseño orientado al dominio" -> "Autoridad del dominio"
-  - 5 "Idempotencia transaccional" -> "Idempotencia e integridad"
-  - 6 "Pruebas de reglas críticas" -> "Verificación obligatoria"
-  - 11 "Sistema visual coherente" -> "Frontend server-rendered y accesible"
-- Modified sections: Governance (constitutional requirements must not be copied into feature specs)
-- Added sections:
-  - principle 12 "Autorización en profundidad"
-  - principle 13 "Privacidad por minimización"
-  - principle 14 "Comunicación entre módulos"
-  - principle 15 "Tiempo determinista"
-  - principle 16 "Propiedad de archivos y migraciones"
+  - 12 "Autorización en profundidad" (trusted identity for interactive and non-interactive operations)
+- Modified sections: none
+- Added sections: none
 - Removed sections: none
 - Follow-up TODOs: none
 
@@ -147,9 +138,12 @@ accesibles y reutilizables sin convertir el navegador en una segunda autoridad d
 ### 12. Autorización en profundidad
 
 La autorización DEBE comprobarse en el servicio de dominio, además de cualquier control inicial de la vista, y DEBE
-evaluarse en el momento de la operación. La identidad DEBE obtenerse de la sesión del servidor; ningún identificador
-de cuenta puede viajar en formularios ni en URLs. Las vistas NO DEBEN decidir permisos por sí mismas: el servicio
-autoritativo debe volver a comprobarlos con el estado vigente.
+evaluarse en el momento de la operación. En solicitudes interactivas, la identidad DEBE obtenerse de la sesión del
+servidor; ningún identificador de cuenta puede viajar en formularios ni en URLs. En procesos no interactivos, la
+identidad DEBE proceder de configuración privada del servidor vinculada a una cuenta preexistente y NO DEBE
+aceptarse mediante argumentos, entrada estándar ni payloads de ejecución. Las vistas y los adaptadores de procesos
+NO DEBEN decidir permisos por sí mismos: el servicio autoritativo debe resolver la identidad y volver a comprobar
+su estado y permisos vigentes.
 
 Ante falta de permiso o recurso inexistente, la respuesta DEBE ser genérica y NO DEBE permitir distinguir un caso del
 otro. Esto evita decisiones obsoletas, suplantación de identidad y filtraciones sobre la existencia de recursos.
@@ -236,4 +230,4 @@ Durante la línea base, no se introducirán otras infraestructuras externas salv
   cumplir una fecha de entrega.
 - Toda enmienda DEBE actualizar la versión y `Last Amended`; `Ratified` conserva la fecha de adopción original.
 
-**Version**: 1.3.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-21
+**Version**: 1.4.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-22
