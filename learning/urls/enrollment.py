@@ -1,3 +1,12 @@
-"""Reserved enrollment routes."""
+"""Enrollment exploration and sign-up routes."""
 
-urlpatterns = []
+from django.urls import path
+
+from learning.views import enrollment as views
+
+urlpatterns = [
+    path("", views.enrollment_list, name="enrollment-list"),
+    path(
+        "tracks/<str:track_id>/", views.enrollment_detail, name="enrollment-detail"
+    ),
+]

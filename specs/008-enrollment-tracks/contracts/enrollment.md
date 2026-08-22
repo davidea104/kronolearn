@@ -39,9 +39,11 @@ Ninguna vista decide autorización por sí misma más allá de `active_account_r
 
 ## Plantillas (`templates/learning/enrollment/`)
 
-- **`list.html`**: extiende `base.html`; itera las tarjetas usando `ui/components/card.html` como contenedor; cada tarjeta incluye `partials/track_card.html` con `track`, `module_count`, `is_enrolled`. Sin tracks, usa `ui/components/empty_state.html`.
-- **`detail.html`**: extiende `base.html`; muestra título, descripción, cantidad de módulos y el mismo bloque de acción de `partials/track_card.html` (o su botón de inscribirse/estado inscrito) para ese track.
+- **`list.html`**: extiende `base.html`; itera las tarjetas en una cuadrícula e incluye `partials/track_card.html` por cada una, con `track`, `module_count`, `is_enrolled`. Sin tracks, usa `ui/components/empty_state.html`.
+- **`detail.html`**: extiende `base.html`; muestra título, descripción, cantidad de módulos y la lista de sus módulos; enlaza de vuelta al listado con `ui/components/button.html`.
 - **`partials/track_card.html`**: fragmento HTMX-swappable con `id="track-card-{{ track.id }}"`; si `is_enrolled` es verdadero, muestra el estado "Inscrito" con icono y texto (nunca solo color, según el principio 11); si es falso, muestra el formulario `POST` hacia `learning:enrollment-enroll` con el botón "Inscribirme" (`ui/components/button.html`, `type="submit"`).
+
+**Nota de implementación**: `ui/components/card.html` solo acepta una cadena de `content` ya renderizada, lo que no permite componer una cuadrícula dinámica con enlaces por elemento sin una plantilla auxiliar. `partials/track_card.html` reproduce los mismos tokens visuales (borde, radio, sombra) que `card.html` en su propio `<style>` en vez de incluirlo, siguiendo el precedente ya establecido por `templates/catalog/learner_track_list.html` para listados de tracks. `button.html` y `empty_state.html` sí se incluyen literalmente, porque su API de parámetros planos encaja sin este problema.
 
 ## Errores y respuestas genéricas
 
