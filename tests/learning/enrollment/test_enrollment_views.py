@@ -133,7 +133,9 @@ class EnrollmentListAndDetailTests(TestCase):
         )
 
         self.client.force_login(self.learner)
-        enroll_url = reverse("learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk})
+        enroll_url = reverse(
+            "learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk}
+        )
         self.client.post(enroll_url)
 
         self.client.logout()
@@ -144,7 +146,9 @@ class EnrollmentListAndDetailTests(TestCase):
 
     def test_htmx_enroll_returns_track_card_partial(self):
         self.client.force_login(self.learner)
-        enroll_url = reverse("learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk})
+        enroll_url = reverse(
+            "learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk}
+        )
 
         response = self.client.post(enroll_url, HTTP_HX_REQUEST="true")
 
@@ -153,7 +157,9 @@ class EnrollmentListAndDetailTests(TestCase):
         self.assertIn(f"track-card-{self.active_track.pk}", response.content.decode())
 
     def test_anonymous_enroll_redirected_to_login(self):
-        enroll_url = reverse("learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk})
+        enroll_url = reverse(
+            "learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk}
+        )
 
         response = self.client.post(enroll_url)
 
@@ -174,7 +180,9 @@ class EnrollmentListAndDetailTests(TestCase):
 
         list_resp = self.client.get(reverse("learning:enrollment-list"))
         detail_resp = self.client.get(
-            reverse("learning:enrollment-detail", kwargs={"track_id": self.active_track.pk})
+            reverse(
+                "learning:enrollment-detail", kwargs={"track_id": self.active_track.pk}
+            )
         )
 
         # The responses should not indicate that the logged-in account is enrolled
@@ -183,11 +191,53 @@ class EnrollmentListAndDetailTests(TestCase):
 
     def test_spoofed_account_field_in_enroll_post_is_ignored(self):
         self.client.force_login(self.learner)
-        enroll_url = reverse("learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk})
-
+        enroll_url = reverse(
+            "learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk}
+        )
         # Attempt to spoof the account by sending an account id in POST data
-        response = self.client.post(enroll_url, data={"account": 9999})
+        self.client.post(enroll_url, data={"account": 9999})
+
         rows = Enrollment.objects.filter(track=self.active_track)
         # Only one enrollment should exist and it must belong to the logged-in account
         self.assertEqual(rows.count(), 1)
         self.assertEqual(rows.first().account, self.learner)
+
+    def test_retired_and_nonexistent_track_detail_return_identical_rejection(self):
+        """Detail for retired track and for a nonexistent id return identical bytes."""
+        self.client.force_login(self.learner)
+
+        retired_resp = self.client.get(
+            reverse(
+                "learning:enrollment-detail", kwargs={"track_id": self.retired_track.pk}
+            )
+        )
+
+        nonexistent_resp = self.client.get(
+            reverse("learning:enrollment-detail", kwargs={"track_id": 99999})
+        )
+
+        self.assertEqual(retired_resp.status_code, nonexistent_resp.status_code)
+        self.assertEqual(retired_resp.content, nonexistent_resp.content)
+
+    def test_retired_and_nonexistent_track_enroll_return_identical_rejection_without_enrolling(
+        self,
+    ):
+        """POST enroll to retired and to nonexistent id return identical bytes and do not create Enrollment."""
+        self.client.force_login(self.learner)
+
+        enroll_retired = self.client.post(
+            reverse(
+                "learning:enrollment-enroll", kwargs={"track_id": self.retired_track.pk}
+            )
+        )
+
+        enroll_nonexistent = self.client.post(
+            reverse("learning:enrollment-enroll", kwargs={"track_id": 99999})
+        )
+
+        self.assertEqual(enroll_retired.status_code, enroll_nonexistent.status_code)
+        self.assertEqual(enroll_retired.content, enroll_nonexistent.content)
+
+        # Assert no Enrollment was created for either attempt
+        rows = Enrollment.objects.filter(track=self.retired_track)
+        self.assertEqual(rows.count(), 0)

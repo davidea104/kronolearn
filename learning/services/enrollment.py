@@ -28,7 +28,7 @@ def enroll(account: Account, track: Track) -> Enrollment:
     try:
         with transaction.atomic():
             return Enrollment.objects.create(account=account, track=track)
-    except IntegrityError as exc:
+    except IntegrityError:
         # The UniqueConstraint in the model uses name learning_enrollment_account_track_unique
         # We don't inspect the message; simply return the existing enrollment when
         # creation failed due to uniqueness.

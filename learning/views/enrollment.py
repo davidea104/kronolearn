@@ -1,10 +1,8 @@
 """HTTP adapters for enrollment exploration."""
 
-from django.http import HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
-from django.views.decorators.http import require_http_methods
-from django.views.decorators.http import require_POST
-from django.http import HttpResponse
+from django.views.decorators.http import require_http_methods, require_POST
 
 from accounts.security import active_account_required
 from catalog.services.queries import get_active_track, list_active_tracks
@@ -55,15 +53,23 @@ def enrollment_enroll(request, track_id):
     # Perform idempotent enrollment
     from learning.services.enrollment import enroll
 
-    enrollment = enroll(request.user, track)
+    enroll(request.user, track)
 
     # If HTMX, return the track card partial for replacement
-    if request.headers.get("HX-Request") == "true" or request.META.get("HTTP_HX_REQUEST"):
-        return render(request, "learning/enrollment/partials/track_card.html", _track_card_context(request.user, track))
+    if request.headers.get("HX-Request") == "true" or request.META.get(
+        "HTTP_HX_REQUEST"
+    ):
+        return render(
+            request,
+            "learning/enrollment/partials/track_card.html",
+            _track_card_context(request.user, track),
+        )
 
     # Otherwise, redirect to the detail page (See Other)
     from django.urls import reverse
 
     resp = HttpResponse(status=303)
-    resp["Location"] = reverse("learning:enrollment-detail", kwargs={"track_id": track.id})
+    resp["Location"] = reverse(
+        "learning:enrollment-detail", kwargs={"track_id": track.id}
+    )
     return resp
