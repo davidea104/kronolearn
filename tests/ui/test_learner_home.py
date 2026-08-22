@@ -31,3 +31,19 @@ class LearnerHomeTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Learner One")
+
+    def test_account_without_enrollments_sees_only_empty_state_catalog_action(self):
+        account = get_user_model().objects.create_user(
+            email="empty-learner@example.com",
+            display_name="Empty Learner",
+            password="correct-horse-battery-staple",
+        )
+        self.client.force_login(account)
+
+        response = self.client.get(self.home_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "ui/components/empty_state.html", count=1)
+        self.assertContains(response, "Aún no tienes tracks inscritos")
+        self.assertNotContains(response, 'class="card ')
+        self.assertContains(response, f'href="{reverse("catalog:track-list")}"')
