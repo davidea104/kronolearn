@@ -1,5 +1,6 @@
 """Stable enrollment service contracts."""
 
+from django.db import IntegrityError, transaction
 from django.db.models import QuerySet
 
 from accounts.models import Account
@@ -21,7 +22,22 @@ def enroll(account: Account, track: Track) -> Enrollment:
     Idempotency: repeated calls for the same account and track return the same logical
     enrollment rather than creating a duplicate.
     """
-    raise NotImplementedError
+    # Attempt to create the unique enrollment. If a concurrent or prior create
+    # violates the unique constraint, return the existing enrollment instead
+    # of raising so callers can assume idempotent behavior.
+    try:
+        with transaction.atomic():
+            return Enrollment.objects.create(account=account, track=track)
+    except IntegrityError as exc:
+        # The UniqueConstraint in the model uses name learning_enrollment_account_track_unique
+        # We don't inspect the message; simply return the existing enrollment when
+        # creation failed due to uniqueness.
+        existing = get_enrollment(account, track)
+        if existing is not None:
+            return existing
+        # If no existing row found, re-raise the original exception since
+        # something else went wrong.
+        raise
 
 
 def get_enrollment(account: Account, track: Track) -> Enrollment | None:

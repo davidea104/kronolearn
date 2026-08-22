@@ -9,4 +9,9 @@ urlpatterns = [
     path(
         "tracks/<str:track_id>/", views.enrollment_detail, name="enrollment-detail"
     ),
+    path(
+        "tracks/<str:track_id>/enroll/",
+        views.enrollment_enroll,
+        name="enrollment-enroll",
+    ),
 ]

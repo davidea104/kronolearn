@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from accounts.models import Account
 from catalog.models import Module, Track
+from learning.models import Enrollment
 
 
 class EnrollmentListAndDetailTests(TestCase):
@@ -94,3 +95,99 @@ class EnrollmentListAndDetailTests(TestCase):
         self.assertIn(login_url, list_response.url)
         self.assertEqual(detail_response.status_code, 302)
         self.assertIn(login_url, detail_response.url)
+
+    # --- T004 tests for enrollment POST behavior (User Story 2) ---
+    def test_enroll_creates_exactly_one_enrollment(self):
+        self.client.force_login(self.learner)
+
+        enroll_url = reverse(
+            "learning:enrollment-enroll",
+            kwargs={"track_id": self.active_track.pk},
+        )
+
+        response = self.client.post(enroll_url)
+
+        # Non-HTMX plain POST should redirect (see other tasks for exact behavior)
+        self.assertIn(response.status_code, (302, 303))
+        rows = Enrollment.objects.filter(account=self.learner, track=self.active_track)
+        self.assertEqual(rows.count(), 1)
+
+    def test_sequential_double_submit_stays_single_enrollment(self):
+        self.client.force_login(self.learner)
+
+        enroll_url = reverse(
+            "learning:enrollment-enroll",
+            kwargs={"track_id": self.active_track.pk},
+        )
+
+        self.client.post(enroll_url)
+        self.client.post(enroll_url)
+        rows = Enrollment.objects.filter(account=self.learner, track=self.active_track)
+        self.assertEqual(rows.count(), 1)
+
+    def test_two_accounts_enroll_independently(self):
+        other = Account.objects.create_user(
+            email="other-learner@example.com",
+            display_name="Other Learner",
+            password="Strong-test-password-123",
+        )
+
+        self.client.force_login(self.learner)
+        enroll_url = reverse("learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk})
+        self.client.post(enroll_url)
+
+        self.client.logout()
+        self.client.force_login(other)
+        self.client.post(enroll_url)
+        rows_all = Enrollment.objects.filter(track=self.active_track)
+        self.assertEqual(rows_all.count(), 2)
+
+    def test_htmx_enroll_returns_track_card_partial(self):
+        self.client.force_login(self.learner)
+        enroll_url = reverse("learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk})
+
+        response = self.client.post(enroll_url, HTTP_HX_REQUEST="true")
+
+        # HTMX requests should return a 200 with the partial HTML fragment
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(f"track-card-{self.active_track.pk}", response.content.decode())
+
+    def test_anonymous_enroll_redirected_to_login(self):
+        enroll_url = reverse("learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk})
+
+        response = self.client.post(enroll_url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("accounts:login"), response.url)
+
+    def test_account_cannot_see_another_accounts_enrollment_status(self):
+        other = Account.objects.create_user(
+            email="other-learner2@example.com",
+            display_name="Other Learner 2",
+            password="Strong-test-password-123",
+        )
+        # Enroll 'other' (create DB row directly for setup)
+        Enrollment.objects.create(account=other, track=self.active_track)
+
+        # Login as self.learner and request list/detail
+        self.client.force_login(self.learner)
+
+        list_resp = self.client.get(reverse("learning:enrollment-list"))
+        detail_resp = self.client.get(
+            reverse("learning:enrollment-detail", kwargs={"track_id": self.active_track.pk})
+        )
+
+        # The responses should not indicate that the logged-in account is enrolled
+        self.assertNotIn("Inscrito", list_resp.content.decode())
+        self.assertNotIn("Inscrito", detail_resp.content.decode())
+
+    def test_spoofed_account_field_in_enroll_post_is_ignored(self):
+        self.client.force_login(self.learner)
+        enroll_url = reverse("learning:enrollment-enroll", kwargs={"track_id": self.active_track.pk})
+
+        # Attempt to spoof the account by sending an account id in POST data
+        response = self.client.post(enroll_url, data={"account": 9999})
+        rows = Enrollment.objects.filter(track=self.active_track)
+        # Only one enrollment should exist and it must belong to the logged-in account
+        self.assertEqual(rows.count(), 1)
+        self.assertEqual(rows.first().account, self.learner)
