@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ track.title }} | KronoLearn{% endblock %}
+{% block content %}
+{% url 'learning:enrollment-list' as list_url %}
+<article aria-labelledby="enrollment-detail-title">
+  <h1 id="enrollment-detail-title">{{ track.title }}</h1>
+  <p class="lead">{{ track.description }}</p>
+  <p class="muted">{{ module_count }} módulos</p>
+  {% if track.active_modules %}
+  <h2>Módulos</h2>
+  <ol class="module-list">
+    {% for item in track.active_modules %}
+    <li>{{ item.title }}</li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+</article>
+<div class="back-link">
+  {% include "ui/components/button.html" with label="← Volver al listado" href=list_url variant="outline" %}
+</div>
+
+<style>
+  .lead {
+    font-size: 18px;
+    color: var(--ink-secondary);
+    margin: 1rem 0;
+    line-height: 1.6;
+  }
+  .module-list {
+    list-style: decimal;
+    padding-left: 2rem;
+  }
+  .module-list li {
+    margin-bottom: 0.75rem;
+  }
+  .back-link {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--divider);
+  }
+</style>
+{% endblock %}

@@ -180,7 +180,6 @@ class RootContractTests(SimpleTestCase):
 
     def test_unimplemented_route_modules_have_no_workflow_routes(self):
         modules = (
-            "learning.urls.enrollment",
             "learning.urls.attempts",
             "learning.urls.progress",
             "gamification.urls",

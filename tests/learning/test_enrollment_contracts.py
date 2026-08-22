@@ -38,9 +38,12 @@ class EnrollmentContractTests(TestCase):
         )
 
     def test_enroll_is_a_side_effect_free_stub(self):
-        with self.assertRaises(NotImplementedError):
-            enroll(self.account, self.track)
-        self.assertFalse(Enrollment.objects.exists())
+        # After implementing enroll, it should create or return the unique Enrollment
+        result = enroll(self.account, self.track)
+        self.assertIsNotNone(result)
+        self.assertTrue(
+            Enrollment.objects.filter(account=self.account, track=self.track).exists()
+        )
 
     def test_get_and_list_enrollments_are_deterministic_and_eager(self):
         other_track = Track.objects.create(

@@ -1,0 +1,55 @@
+{# templates/learning/enrollment/partials/track_card.html #}
+{# Parámetros: track (Track), module_count (int), is_enrolled (bool) #}
+<div id="track-card-{{ track.id }}" class="track-card">
+  <h3><a href="{% url 'learning:enrollment-detail' track.id %}">{{ track.title }}</a></h3>
+  <p>{{ track.description }}</p>
+  <p class="muted">{{ module_count }} módulos</p>
+  {% if is_enrolled %}
+  <div class="enrolled" role="status" aria-live="polite">
+    <span class="enrolled-icon" aria-hidden="true">✅</span>
+    <span class="enrolled-label">Inscrito</span>
+  </div>
+  {% else %}
+  <form method="post" action="{% url 'learning:enrollment-enroll' track.id %}"
+        hx-post="{% url 'learning:enrollment-enroll' track.id %}"
+        hx-target="#track-card-{{ track.id }}"
+        hx-swap="outerHTML">
+    {% csrf_token %}
+    {% include "ui/components/button.html" with label="Inscribirme" type="submit" %}
+  </form>
+  {% endif %}
+</div>
+
+<style>
+  .track-card {
+    background: var(--paper);
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-hard);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .track-card h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 20px;
+  }
+  .track-card h3 a {
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .track-card h3 a:hover {
+    text-decoration: underline;
+  }
+  .track-card h3 a:focus-visible {
+    outline: 2px solid var(--border);
+    outline-offset: 2px;
+  }
+  .track-card p {
+    margin: 0.5rem 0;
+    font-size: 16px;
+  }
+  .track-card p:last-child {
+    margin-bottom: 0;
+  }
+</style>
