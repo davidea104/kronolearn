@@ -8,6 +8,13 @@
 
 **Input**: User description: "Como visitante que llega por primera vez a KronoLearn, quiero ver una página de inicio pública en la raíz del sitio que me explique brevemente qué es la plataforma y me ofrezca crear una cuenta o iniciar sesión, para decidir si quiero registrarme."
 
+## Clarifications
+
+### Session 2026-08-22
+
+- Q: Cuando una cuenta activa abre la portada, ¿qué acciones debe ver? → A: Solo "Continuar aprendiendo"; registro e inicio de sesión quedan reservados para visitantes.
+- Q: ¿Cómo debe ejecutarse y registrarse la validación de comprensión exigida por SC-002? → A: Se sustituye por una revisión de aceptación del responsable del producto.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Conocer KronoLearn y elegir cómo entrar (Priority: P1)
@@ -38,6 +45,7 @@ Como usuario autenticado, quiero ir desde la portada a mi espacio de aprendizaje
 
 1. **Given** una cuenta activa con sesión iniciada en la portada, **When** elige continuar aprendiendo, **Then** llega a `/learn/`.
 2. **Given** una cuenta activa que inició sesión correctamente, **When** termina el proceso de acceso, **Then** continúa aterrizando en `/learn/`.
+3. **Given** una cuenta activa con sesión iniciada, **When** abre la portada, **Then** ve la acción para continuar aprendiendo y no ve las acciones de registro ni de inicio de sesión.
 
 ---
 
@@ -57,7 +65,7 @@ Como responsable de la plataforma, quiero que abrir la portada no debilite la pr
 
 ### Edge Cases
 
-- Si una persona autenticada abre directamente `/`, la portada permanece disponible y ofrece el acceso a `/learn/`; no la redirige automáticamente ni pierde las opciones públicas.
+- Si una persona autenticada abre directamente `/`, la portada permanece disponible, no la redirige automáticamente y sustituye las acciones de registro e inicio de sesión por el acceso a `/learn/`.
 - Si una persona sin cuenta intenta seguir el acceso al espacio de aprendizaje, la protección vigente de `/learn/` decide el acceso y la portada no revela contenido reservado.
 - Los enlaces de registro e inicio de sesión deben conservar destinos válidos aunque la persona vuelva a la portada mediante navegación del navegador.
 - Si el contenido estático de la portada no puede cargar recursos decorativos, el texto y los enlaces principales deben seguir siendo comprensibles y operables.
@@ -68,8 +76,8 @@ Como responsable de la plataforma, quiero que abrir la portada no debilite la pr
 
 - **FR-001**: El sistema DEBE ofrecer una portada pública exactamente en `/` y responder con estado `200` cuando una persona sin sesión iniciada la consulta, sin redirigirla.
 - **FR-002**: La portada DEBE explicar de forma breve y comprensible qué es KronoLearn y qué valor ofrece a una persona que evalúa registrarse.
-- **FR-003**: La portada DEBE incluir enlaces operables y claramente diferenciados para crear una cuenta y para iniciar sesión mediante los flujos existentes.
-- **FR-004**: La portada DEBE ofrecer a una persona autenticada un acceso operable a `/learn/` para continuar con su aprendizaje.
+- **FR-003**: Para una persona sin sesión iniciada, la portada DEBE incluir enlaces operables y claramente diferenciados para crear una cuenta y para iniciar sesión mediante los flujos existentes.
+- **FR-004**: Para una cuenta activa con sesión iniciada, la portada DEBE sustituir las acciones de registro e inicio de sesión por una única acción operable para continuar a `/learn/`.
 - **FR-005**: La ruta raíz pública DEBE conservar el identificador estable `ui:index`; al resolver `/`, el resultado DEBE ser `ui:index`.
 - **FR-006**: La incorporación de la portada NO DEBE cambiar la exigencia de una cuenta activa para consultar `/learn/`.
 - **FR-007**: La incorporación de la portada NO DEBE cambiar el destino posterior a un inicio de sesión exitoso, que DEBE seguir siendo `/learn/`.
@@ -79,7 +87,7 @@ Como responsable de la plataforma, quiero que abrir la portada no debilite la pr
 
 ### Acceptance Criteria by Requirement
 
-- **AC-FR-001-005**: Una comprobación de la raíz confirma una respuesta `200` para visitantes, una explicación breve de KronoLearn, enlaces separados y operables a registro e inicio de sesión, acceso visible a `/learn/` para cuentas autenticadas y el identificador de ruta `ui:index` al resolver `/`.
+- **AC-FR-001-005**: Una comprobación de la raíz confirma una respuesta `200` para visitantes, una explicación breve de KronoLearn, enlaces separados y operables a registro e inicio de sesión solo para personas sin sesión, una única acción visible hacia `/learn/` para cuentas activas autenticadas y el identificador de ruta `ui:index` al resolver `/`.
 - **AC-FR-006-007**: Las comprobaciones de regresión confirman que una persona sin cuenta activa no accede a `/learn/`, una cuenta activa sí accede y todo inicio de sesión exitoso sigue aterrizando en `/learn/`.
 - **AC-FR-008-009**: La portada puede presentarse sin consultar contenido persistido y una inspección de su contenido confirma que no incorpora blog, precios, testimonios, formulario de contacto ni selección de idioma.
 - **AC-FR-010**: La revisión de conformidad identifica evidencia automatizada del acceso público a la portada, la protección conservada de `/learn/`, la navegación completa mediante teclado y el significado comprensible de enlaces y acciones sin depender solo del color.
@@ -89,7 +97,7 @@ Como responsable de la plataforma, quiero que abrir la portada no debilite la pr
 ### Measurable Outcomes
 
 - **SC-001**: El 100% de las visitas de comprobación realizadas sin sesión iniciada puede abrir la raíz del sitio y ver la portada sin autenticarse.
-- **SC-002**: En una validación con cinco personas que no conocen KronoLearn, al menos cuatro pueden explicar en sus propias palabras el propósito de la plataforma e identificar las dos opciones de acceso en 30 segundos o menos.
+- **SC-002**: En la revisión de aceptación, el responsable del producto aprueba la portada solo si, sin contexto adicional, puede identificar en 30 segundos o menos el propósito de la plataforma y las dos opciones de acceso para visitantes.
 - **SC-003**: El 100% de las personas autenticadas de la prueba puede llegar desde la portada al espacio de aprendizaje en una sola acción.
 - **SC-004**: El 100% de las comprobaciones de acceso confirma que las personas sin cuenta activa siguen sin poder consultar el espacio de aprendizaje.
 - **SC-005**: El 100% de los inicios de sesión exitosos de la prueba continúa llevando al espacio de aprendizaje.
@@ -99,7 +107,7 @@ Como responsable de la plataforma, quiero que abrir la portada no debilite la pr
 
 - Los flujos de creación de cuenta e inicio de sesión ya existen y mantienen sus destinos actuales; esta feature únicamente ofrece enlaces hacia ellos.
 - El espacio de aprendizaje ya existe en `/learn/`, admite cuentas activas y conserva su protección vigente.
-- Una cuenta autenticada también puede consultar la portada pública; la diferencia relevante es que dispone de una acción para continuar al espacio de aprendizaje.
+- Una cuenta autenticada también puede consultar la portada pública; ve la acción para continuar al espacio de aprendizaje en lugar de las acciones de registro e inicio de sesión.
 - La explicación de KronoLearn es texto editorial estático y breve, suficiente para comunicar el propósito sin incorporar nuevas secciones comerciales o administrables.
 - Los términos "respuesta correcta" y "recibe 200" describen que la raíz entrega satisfactoriamente la portada solicitada.
 
