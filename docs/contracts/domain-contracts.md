@@ -101,7 +101,7 @@ The future session producer sends `learning.signals.session_completed` synchrono
 
 ## Integration Surfaces
 
-The root URL configuration includes each namespace exactly once: `catalog`, `learning`, `gamification`, and `analytics`. The learning package reserves `learn/enrollments/`, `learn/session/`, `learn/attempts/`, and `learn/progress/`; gamification and analytics expose empty namespaced aggregators. Unimplemented leaf routes remain absent.
+The root URL configuration includes each namespace exactly once: `catalog`, `learning`, `gamification`, and `analytics`. The learning package reserves `learn/enrollments/`, `learn/session/`, `learn/attempts/`, and `learn/progress/`; gamification and analytics expose empty namespaced aggregators. Unimplemented leaf routes remain absent. The daily-session leaf exposes only `learning:session-current(track_id)` as an authenticated temporary placeholder; its owner may replace the response while preserving that name and argument.
 
 The base template keeps `title`, nests legacy `content` inside `main`, and provides `sidebar`, `fragments`, and `scripts`. It renders semantic navigation and preserves visible keyboard focus rules.
 

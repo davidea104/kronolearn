@@ -1,6 +1,7 @@
 """Stable enrollment service contracts."""
 
-from django.db.models import QuerySet
+from django.core.exceptions import PermissionDenied
+from django.db.models import Count, QuerySet
 
 from accounts.models import Account
 from catalog.models import Track
@@ -30,9 +31,13 @@ def get_enrollment(account: Account, track: Track) -> Enrollment | None:
 
 
 def list_enrollments(account: Account) -> QuerySet[Enrollment]:
-    """Return all account enrollments with tracks loaded in stable order."""
+    """Return an active account's enrollments and track module counts."""
+    if not Account.objects.filter(pk=account.pk, is_active=True).exists():
+        raise PermissionDenied
+
     return (
         Enrollment.objects.filter(account=account)
         .select_related("track")
+        .annotate(module_count=Count("track__modules"))
         .order_by("enrolled_at", "id")
     )
