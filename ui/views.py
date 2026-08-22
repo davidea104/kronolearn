@@ -7,6 +7,10 @@ from accounts.security import active_account_required
 from learning.services.enrollment import list_enrollments
 
 
+def index(request):
+    return render(request, "ui/index.html")
+
+
 @active_account_required
 def learner_home(request):
     return render(
